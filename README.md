@@ -136,11 +136,11 @@ Bu repositoride acikca belirtilmis bir lisans dosyasi bulunmuyorsa, tum haklar p
 
 ## 10. 2026 Stratejik Ufuk: Turkiye'de Enerji Donusumu, Karbon Ekonomisi ve Genc Liderler Icin Yol Haritasi
 
-Bu bolum, teknik urun dokumantasyonuna ek olarak 2026 perspektifinde enerji donusumu, karbon ekonomisi ve yonetisim alaninda stratejik bir cerceve sunar.
+Bu bolum, teknik urun dokumantasyonuna ek olarak 2026 perspektifinde enerji donusumu, karbon ekonomisi ve yonetisim alaninda stratejik bir cerceve sunar. Olgusal bilgiler koseli parantezle numaralanmis ve bolum 10.7'deki birincil kaynaklara baglanmistir; digerleri yazarin degerlendirmesidir.
 
 ### 10.1 Giris: 2026 Donum Noktasinda Kuresel ve Ulusal Durum Analizi
 
-2026 yili; kuresel hukuk ortaminda hizlanan iklim baskilari, evrilen jeopolitik ittifaklar ve ulus devletlerin stratejik yeniden konumlanmalarinin kesistigi belirleyici bir donum noktasi olarak tanimlanmaktadir. Bu tarih, yalnizca takvimsel bir gecis degil; enerji, sanayi ve surdurulebilirligin gelecegi hakkinda cesurca dusunmeyi zorunlu kilan yeni bir enerji caginin baslangicidir.
+2026 yili; kuresel hukuk ortaminda hizlanan iklim baskilari, evrilen jeopolitik ittifaklar ve ulus devletlerin stratejik yeniden konumlanmalarinin kesistigi belirleyici bir donum noktasi olarak degerlendirilmektedir. Bu tarih, yalnizca takvimsel bir gecis degil; enerji, sanayi ve surdurulebilirligin gelecegi hakkinda cesurca dusunmeyi zorunlu kilan yeni bir enerji caginin baslangicidir.
 
 Kuresel olcekte nukleer teknolojilerdeki canlanma, kritik mineraller uzerindeki sert rekabet ve sikilasan iklim regulasyonlari, piyasa egemenliginin yeni parametrelerini belirlemektedir. Turkiye acisindan bu surec; regulatif uyumu bir maliyet yukunden cikarip stratejik pazar hakimiyeti aracina donusturme firsatidir.
 
@@ -153,15 +153,15 @@ Donusumu yalnizca takip eden degil, yasal ongoruyu kurumsal stratejisine entegre
 
 ### 10.2 Yeni Enerji Kaynaklari: Nukleer Ronesans ve Kritik Minerallerin Jeopolitigi
 
-Turkiye'nin nukleer enerji hedefi, nukleer enerjinin surdurulebilir enerji stratejilerinde guvenilir bir dayanak olarak yeniden mesruiyet kazanmasiyla es zamanli bir ivme yakalamistir. Ozellikle Kucuk Moduler Reaktorler (KMR/SMR) etrafindaki teknolojik sicrama, 2026 yilinda yeni lisanslama yollarini ve sinir otesi teknoloji transferini hizlandiracaktir.
+Turkiye'nin nukleer enerji hedefi, nukleer enerjinin surdurulebilir enerji stratejilerinde guvenilir bir dayanak olarak yeniden mesruiyet kazanmasiyla es zamanli bir ivme yakalamistir. Ozellikle Kucuk Moduler Reaktorler (KMR/SMR) etrafindaki teknolojik gelismelerin, yeni lisanslama yollarini ve sinir otesi teknoloji transferini hizlandirmasi beklenmektedir.
 
-Nukleer enerji, Turkiye'nin AB Sinirda Karbon Duzenleme Mekanizmasi (CBAM) karsisinda ihracatciya dusuk karbonlu baz yuk elektrigi sunabilmesinin kritik stratejik araclarindan biri olarak konumlanmaktadir.
+Nukleer enerji, Turkiye'nin AB Sinirda Karbon Duzenleme Mekanizmasi (CBAM) karsisinda ihracatciya dusuk karbonlu baz yuk elektrigi sunabilmesinin stratejik araclarindan biri olarak konumlanmaktadir.
 
-Enerji donusumunun hammadde ayaginda ise kritik mineraller icin petrolun ilk donemlerine benzer bir jeopolitik rekabet yasanmaktadir. Turkiye, transit ve isleme merkezi potansiyelini korurken ciddi yasal ve ESG/CSY gerilimleriyle de karsi karsiyadir. Ornek olarak zeytinliklerin madencilik faaliyetlerine acilmasi tartismasi; enerji guvenligi ile cevresel koruma arasindaki regulatif dengelemenin somut bir ornegidir.
+Enerji donusumunun hammadde ayaginda ise kritik mineraller icin yogun bir jeopolitik rekabet yasanmaktadir. Turkiye, transit ve isleme merkezi potansiyelini korurken ciddi yasal ve ESG/CSY gerilimleriyle de karsi karsiyadir. Ornek olarak, 7554 sayili Kanun'un 11. maddesiyle 3213 sayili Maden Kanunu'na eklenen Gecici Madde 45, tapuda zeytinlik olarak kayitli veya fiilen zeytinlik bulunan alanlarda belirli kosullarla madencilik faaliyetine izin vermistir [5]; bu duzenlemeye iliskin kamuoyu tartismasi, enerji guvenligi ile cevresel koruma arasindaki regulatif dengelemenin somut bir ornegidir.
 
 ### 10.3 Karbon Ekonomisi: CBAM, Iklim Kanunu ve Yeni Ticaret Rejimi
 
-2026 itibariyla AB CBAM'in tam kapasite devreye girmesi, Turk ihracatcisi icin karbon performansinin fiyat ve kalite kriterlerinin onune gectigi yeni bir donemi baslatacaktir. Ozellikle su sektorler karbon yogunlugu uzerinden test edilmektedir:
+AB CBAM, 1 Ocak 2026 itibariyla kesin donemine (definitive regime) gecmistir [1]. Bu, Turk ihracatcisi icin karbon performansinin fiyat ve kalite kriterleri kadar belirleyici oldugu yeni bir donemi baslatmaktadir. CBAM'in kapsadigi sektorler sunlardir [1]:
 
 - Demir-celik
 - Cimento
@@ -170,21 +170,13 @@ Enerji donusumunun hammadde ayaginda ise kritik mineraller icin petrolun ilk don
 - Elektrik
 - Hidrojen
 
-Emisyon beyani yapmayan veya yuksek karbon ayak izine sahip firmalarin AB pazarinda ek vergi ve rekabet dezavantaji riski artmaktadir.
+Emisyon verisi sunamayan veya yuksek karbon ayak izine sahip firmalarin AB pazarinda ek maliyet ve rekabet dezavantaji riski artmaktadir.
 
-Turkiye'nin cevabi yeni iklim rejimi kapsaminda Iklim Kanunu ve Emisyon Ticaret Sistemi (ETS) ile sekillenmektedir. Kurumsal kapasite insasi adina, 11-12 Subat 2026 tarihlerinde TSE tarafindan duzenlenecek TS EN ISO 14067 Urun Karbon Ayak Izi Egitimi kritik bir adim olarak degerlendirilmektedir.
-
-- Egitim ucreti: 8.232 TL
-- Ogrenci indirimi: %25
+Turkiye'nin cevabi, 9 Temmuz 2025 tarihli ve 32951 sayili Resmi Gazete'de yayimlanan 7552 sayili Iklim Kanunu [2] ve bu kanunla kurulan Emisyon Ticaret Sistemi (ETS) cercevesinde sekillenmektedir. Kurumsal kapasite insasi icin TS EN ISO 14067 (urun karbon ayak izi) ve ISO 14064 (kurumsal sera gazi envanteri) standartlarinda yetkinlik kazanmak kritik bir adim olarak degerlendirilmektedir.
 
 ### 10.4 Dijital Donusum: GreenOps ve CarbonTrace ile Kurumsal Karbon Yonetimi
 
-Excel tabanli manuel veri toplama yontemleri, Scope 3 emisyonlarinin olcum zorlugu ve denetlenebilir veri altyapisi eksikligi; kurumlar icin operasyonel ve hukuki riskler olusturmaktadir. Bu noktada yerel yazilim cozumleri, yuksek lisans bedelli global urunlere gore ciddi maliyet avantaji saglayabilmektedir.
-
-Ornek maliyet perspektifi:
-
-- Kuresel paketler: yaklasik 25.000 - 150.000 USD
-- Yerel paketler (basic baslangic): yaklasik 1.500 - 3.000 USD
+Excel tabanli manuel veri toplama yontemleri, Scope 3 emisyonlarinin olcum zorlugu ve denetlenebilir veri altyapisi eksikligi; kurumlar icin operasyonel ve hukuki riskler olusturmaktadir. Bu noktada yerel yazilim cozumleri, global urunlere gore maliyet ve veri egemenligi avantaji saglayabilir.
 
 #### GreenOps ve CarbonTrace Teknik Mimari Ozeti (mevcut durum)
 
@@ -206,26 +198,32 @@ Iklim degisikligi ile mucadele, yalnizca teknokratik bir surec degil; seffaflik 
 
 Ilgili hukuki cerceve:
 
-- 5393 sayili Belediye Kanunu (Madde 13)
-- 4982 sayili Bilgi Edinme Kanunu
+- 5393 sayili Belediye Kanunu, Madde 13 (Hemsehri hukuku): hemsehrilerin belediye karar ve hizmetlerine katilma ve belediye faaliyetleri hakkinda bilgilenme hakki [3]
+- 4982 sayili Bilgi Edinme Hakki Kanunu [4]
 
-Yerel iklim butcelerini ve komisyon tutanaklarini izlemek isteyen paydaslar icin TESEV'in MoDeL (Yerel Iklim Politikalari Izleme ve Katilim Araci) yaklasimi stratejik bir dijital enstruman olarak one cikmaktadir.
+#### Yerel Yonetim Butce ve Izleme Takvimi (5393 sayili Kanun'a gore)
 
-#### 2026 Yerel Yonetim Izleme ve Butce Takvimi
-
-- 11 Temmuz: Birimlerin gider teklifleri ve performans fislerinin ilgili mudurluklere gonderilmesi
-- 21-25 Temmuz: Birimler arasi butce gorusmeleri
-- Agustos sonu: Performans Programinin encumene havalesi
-- Eylul son hafta: Butce tasarisi ve performans programinin ust yoneticiye sunulmasi
-- Ekim: Butce tasarisi ve performans programinin belediye meclisine sunulmasi
-- Nisan: Onceki yilin hedeflerini iceren Faaliyet Raporunun meclise sunumu ve denetimi
+- **1 Eylul'den once:** Belediye baskaninin hazirladigi butce tasarisi encumene sunulur (Madde 62) [3]
+- **1 Kasim'dan once:** Encumen, butceyi gorusuyle birlikte belediye meclisine sunar (Madde 62) [3]
+- **Yilbasindan once:** Meclis butceyi aynen veya degistirerek kabul eder (Madde 62) [3]
+- **Nisan ayi toplantisi:** Faaliyet raporu belediye baskani tarafindan meclise sunulur ve kamuoyuna aciklanir (Madde 56) [3]
 
 ### 10.6 Sonuc ve Stratejik Cagri: Genc TUYAFED Icin Eylem Plani
 
 2026 stratejik ufku, teknik yetkinligi demokratik denetimle birlestiren liderler icin guclu firsatlar barindirmaktadir. Genc TUYAFED uyeleri icin uc temel oncelik asagidadir:
 
-1. Teknik yetkinlik ve sertifikasyon: TSE ISO 14067 egitimi ile urun karbon ayak izi hesaplamasinda uzmanlasma.
+1. Teknik yetkinlik ve sertifikasyon: TS EN ISO 14067 ve ISO 14064 standartlarinda urun ve kurumsal karbon ayak izi hesaplamasinda uzmanlasma.
 2. Dijital donusum ve yerli yazilim savunuculugu: Excel bagimliligini azaltan, kurumsal entegrasyona uygun yerli platformlara liderlik.
-3. Veriye dayali yerel denetim: MoDeL gibi araclarla Temmuz ve Ekim butce dongulerinde iklim taahhutlerinin izlenmesi.
+3. Veriye dayali yerel denetim: 5393 sayili Kanun'daki butce takvimi (Eylul–Aralik) ve Nisan faaliyet raporu donemlerinde, Bilgi Edinme Hakki Kanunu'ndan da yararlanarak iklim taahhutlerinin izlenmesi.
 
 2026'nin kazananlari, regulasyonlari engel olarak degil stratejik mimarilerinin temel tasi olarak konumlandirabilenler olacaktir.
+
+### 10.7 Kaynaklar (birincil, 29 Ekim 2026 itibariyla erisildi)
+
+1. Avrupa Komisyonu, Vergilendirme ve Gumruk Birligi Genel Mudurlugu — *Carbon Border Adjustment Mechanism*: "CBAM applies in its definitive regime from 1 January 2026"; sektorler: cement, iron and steel, aluminium, fertilisers, electricity and hydrogen. https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism_en
+2. Resmi Gazete, 9 Temmuz 2025, Sayi 32951 — 7552 sayili Iklim Kanunu. https://www.resmigazete.gov.tr/eskiler/2025/07/20250709.htm
+3. 5393 sayili Belediye Kanunu (Madde 13, 56, 62), Mevzuat Bilgi Sistemi. https://www.mevzuat.gov.tr/mevzuatmetin/1.5.5393.pdf
+4. 4982 sayili Bilgi Edinme Hakki Kanunu (RG 24/10/2003, Sayi 25269), Mevzuat Bilgi Sistemi. https://www.mevzuat.gov.tr/mevzuatmetin/1.5.4982.pdf
+5. Resmi Gazete, 24 Temmuz 2025, Sayi 32965 — 7554 sayili Bazi Kanunlarda Degisiklik Yapilmasina Dair Kanun, Madde 11 (3213 sayili Maden Kanunu Gecici Madde 45). https://www.resmigazete.gov.tr/eskiler/2025/07/20250724-1.htm
+
+Bu bolumden cikarilan, kaynagi dogrulanamayan ifadeler ve cikarilma nedenleri: `docs/README_cikarilan_ifadeler.md`.
