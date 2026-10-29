@@ -133,6 +133,12 @@ class _TargetsScreenState extends State<TargetsScreen> {
                     if (((p['carbonCreditsOffset'] ?? 0) as num) > 0)
                       StatusChip(label: 'Kredi: ${Fmt.co2(p['carbonCreditsOffset'] as num?)}', color: const Color(0xFFB18CFF)),
                   ]),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    onPressed: () => Navigator.pushNamed(context, '/scenario'),
+                    icon: const Icon(Icons.tune_rounded),
+                    label: const Text('Azaltım senaryosu kur'),
+                  ),
                 ],
               ),
             ),

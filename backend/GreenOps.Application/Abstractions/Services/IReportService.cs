@@ -7,6 +7,8 @@ public interface IReportService
     Task<Result<ReportGeneratedResponse>> GenerateIso14064Async(Guid companyId, int year, CancellationToken cancellationToken = default);
     Task<Result<ReportGeneratedResponse>> GenerateGhgProtocolAsync(Guid companyId, int year, CancellationToken cancellationToken = default);
     Task<Result<byte[]>> ExportExcelAsync(Guid companyId, string dataType, CancellationToken cancellationToken = default);
+    /// <summary>Yıllık envanter (yalnızca onaylı kayıtlar). format: "pdf" veya "xlsx".</summary>
+    Task<Result<ReportFile>> ExportInventoryAsync(Guid companyId, int year, string format, CancellationToken cancellationToken = default);
     Task<Result<IReadOnlyList<ReportHistoryDto>>> GetHistoryAsync(Guid companyId, CancellationToken cancellationToken = default);
 }
 
@@ -17,6 +19,8 @@ public class ReportGeneratedResponse
     public string ReportType { get; set; } = string.Empty;
     public int Year { get; set; }
 }
+
+public record ReportFile(byte[] Content, string ContentType, string FileName);
 
 public class ReportHistoryDto
 {

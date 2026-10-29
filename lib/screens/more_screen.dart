@@ -40,6 +40,8 @@ class _MoreScreenState extends State<MoreScreen> {
   Widget build(BuildContext context) {
     final items = <(IconData, String, String, String, Color, UserRole)>[
       (Icons.flag_outlined, 'Hedefler', 'Azaltım hedefleri ve ilerleme', '/targets', AppColors.primary, UserRole.personnel),
+      (Icons.tune_rounded, 'Azaltım senaryosu', 'Önlemle yılda kaç tCO₂e azalır?', '/scenario', AppColors.accent, UserRole.personnel),
+      (Icons.description_outlined, 'Raporlar', 'Yıllık envanter: PDF ve Excel', '/reports', const Color(0xFFFFD166), UserRole.manager),
       (Icons.notifications_none_rounded, 'Bildirimler', 'Size gelen uyarılar', '/notifications', AppColors.warning, UserRole.personnel),
       (Icons.local_shipping_outlined, 'Tedarikçiler', 'Kapsam 3 ve ESG puanları', '/suppliers', AppColors.accent, UserRole.manager),
       (Icons.group_outlined, 'Kullanıcılar', 'Ekip ve roller', '/users', const Color(0xFF8FD14F), UserRole.manager),

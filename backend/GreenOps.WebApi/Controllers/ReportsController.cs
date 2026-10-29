@@ -47,6 +47,16 @@ public class ReportsController : ApiControllerBase
         return File(result.Value!, "text/csv", $"{dataType}_{DateTime.UtcNow:yyyyMMdd}.csv");
     }
 
+    /// <summary>GET /api/reports/inventory?year=2026&amp;format=pdf|xlsx — Yıllık envanter özeti (yalnızca onaylı kayıtlar)</summary>
+    [HttpGet("inventory")]
+    public async Task<IActionResult> Inventory([FromQuery] Guid? companyId, [FromQuery] int year, [FromQuery] string format, CancellationToken ct)
+    {
+        if (!TryResolveCompany(companyId, out var cid)) return CompanyForbidden();
+        var result = await _reportService.ExportInventoryAsync(cid, year, format?.ToLowerInvariant() ?? "", ct);
+        if (!result.IsSuccess) return BadRequest(new { error = result.Error });
+        return File(result.Value!.Content, result.Value.ContentType, result.Value.FileName);
+    }
+
     /// <summary>GET /api/reports/history — Geçmiş rapor arşivi</summary>
     [HttpGet("history")]
     public async Task<IActionResult> GetHistory([FromQuery] Guid companyId, CancellationToken ct)

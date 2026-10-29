@@ -229,12 +229,7 @@ IconData _categoryIcon(String name) => switch (name) {
   _ => Icons.eco_outlined,
 };
 
-String _categoryLabel(String name) => switch (name) {
-  'Electricity' => 'Elektrik',
-  'Natural Gas' => 'Doğalgaz',
-  'Diesel' => 'Motorin',
-  _ => name,
-};
+String _categoryLabel(String name) => Fmt.category(name);
 
 /// Katsayının yılı, kaynağı ve resmi kaynağa dayanıp dayanmadığı.
 class _FactorSourceLine extends StatelessWidget {

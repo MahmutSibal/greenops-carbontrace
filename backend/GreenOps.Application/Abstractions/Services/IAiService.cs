@@ -8,7 +8,7 @@ namespace GreenOps.Application.Abstractions.Services;
 /// </summary>
 public interface IAiService
 {
-    /// <summary>Fatura/sayaç görselinden tüketim bilgisini çıkarır (görsel model OCR → metin model yapılandırma).</summary>
+    /// <summary>Fatura/sayaç görselinden tüketim bilgisini çıkarır (önce tek aşamalı gemma4; yetersizse qwen3-vl OCR → gemma4).</summary>
     Task<Result<InvoiceExtraction>> ExtractInvoiceAsync(Guid companyId, byte[] image, CancellationToken cancellationToken = default);
 
     /// <summary>Şirketin emisyon verisinden tahmin, anomali ve öneri üretir.</summary>
@@ -18,6 +18,9 @@ public interface IAiService
     Task<Result<string>> ChatAsync(Guid companyId, string userName, IReadOnlyList<ChatTurn> history, string message, CancellationToken cancellationToken = default);
 
     Task<AiStatus> GetStatusAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>Metin modelini belleğe yükler; ilk kullanıcı isteğinin soğuk başlangıç beklemesini önler.</summary>
+    Task WarmUpAsync(CancellationToken cancellationToken = default);
 }
 
 public class InvoiceExtraction
@@ -33,6 +36,8 @@ public class InvoiceExtraction
     public Guid? SuggestedCategoryId { get; set; }
     public string? SuggestedCategoryName { get; set; }
     public string RawText { get; set; } = string.Empty;
+    /// <summary>Okuma yöntemi: single-stage (gemma4 doğrudan) veya two-stage (qwen3-vl OCR → gemma4).</summary>
+    public string Method { get; set; } = string.Empty;
     public List<string> Warnings { get; set; } = new();
 }
 

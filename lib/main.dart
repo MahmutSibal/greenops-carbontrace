@@ -5,6 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/module_screens.dart';
+import 'screens/planning_screens.dart';
 import 'screens/register_screen.dart';
 import 'services/api_client.dart';
 import 'services/auth_service.dart';
@@ -56,6 +57,8 @@ class GreenOpsApp extends StatelessWidget {
         '/users': (context) => const UsersScreen(),
         '/suppliers': (context) => const SuppliersScreen(),
         '/targets': (context) => const TargetsScreen(),
+        '/scenario': (context) => const ScenarioScreen(),
+        '/reports': (context) => const ReportsScreen(),
         '/notifications': (context) => const NotificationsScreen(),
         '/audit-logs': (context) => const AuditLogsScreen(),
         '/settings': (context) => const SettingsScreen(),

@@ -80,6 +80,19 @@ flutter run -d emulator-5554
 - Acik metin HTTP sadece `10.0.2.2` icin izinlidir (`android/app/src/main/res/xml/network_security_config.xml`). Baska bir sunucu icin HTTPS kullanin: `flutter run --dart-define=API_URL=https://sunucu/api`.
 - VS Code icin `.vscode/launch.json` icinde "GreenOps (Android emulator)" yapilandirmasi vardir.
 
+### 4.4 Release derlemesi (Android)
+
+Uygulama kimligi `com.tigrisecolab.carbontrace`, simge kaynagi `assets/icon/` (`dart run flutter_launcher_icons` ile uretilir).
+
+1. Imza anahtari olusturun (bir kez; dosya ve parolalar depoya girmez, `.gitignore`):
+   ```powershell
+   keytool -genkeypair -keystore android/greenops-release.jks -storetype PKCS12 -keyalg RSA -keysize 2048 -validity 10000 -alias greenops
+   ```
+2. `android/key.properties` dosyasini yazin: `storeFile=greenops-release.jks`, `storePassword=...`, `keyPassword=...`, `keyAlias=greenops`.
+3. `flutter build apk --release` (cikti: `build/app/outputs/flutter-apk/app-release.apk`; tek mimari icin `--split-per-abi`).
+
+`key.properties` yoksa release debug anahtariyla imzalanir: emulator'de calisir, dagitima uygun degildir. Anahtar kaybolursa ayni kimlikle guncelleme yayimlanamaz; yedekleyin.
+
 ## 5. Konfigurasyon
 
 `backend/GreenOps.WebApi/appsettings.json`:
@@ -97,11 +110,16 @@ Bulut AI servisi kullanilmaz; modeller backend'in calistigi makinedeki Ollama'da
 
 | Islev | Model | Nasil |
 |---|---|---|
-| Faturadan okuma (`POST /api/ai/invoice-scan`) | qwen3-vl:8b → gemma4:12b | qwen3-vl gorseli duz metne cevirir (OCR); gemma4 metinden tuketim/birim/donem cikarir (JSON semasi). Sonuc sadece **oneridir**, kullanici kontrol edip kaydeder. |
+| Faturadan okuma (`POST /api/ai/invoice-scan`) | gemma4:12b (yedek: qwen3-vl:8b → gemma4:12b) | Once gemma4 gorseli dogrudan okur (JSON semasi; olcumde ~15 sn). Tuketim bulunamazsa veya guven 0,6'nin altindaysa qwen3-vl OCR + gemma4 yapilandirma denenir. Yanittaki `method` alani hangi yolun kullanildigini gosterir. Sonuc sadece **oneridir**, kullanici kontrol edip kaydeder. |
 | Ongoruler (`GET /api/ai/insights`) | gemma4:12b | Tahmin (son 6 ayin dogrusal egilimi) ve anomali (kategori medyaninin 3 kati) **kodda** hesaplanir; model sadece ozet ve oneri yazar. 30 dk onbellek. |
 | Asistan (`POST /api/ai/chat`) | gemma4:12b | Sirketin onayli verisiyle sinirli; kayit olusturamaz/onaylayamaz. |
 
-Not: qwen3-vl'ye dogrudan JSON istendiginde dusunme ciktisinda takildigi gozlendi; bu yuzden iki asamali yapi kullanilir. Iki model ayni anda VRAM'e sigmazsa ilk fatura okumasi model yukleme suresi nedeniyle uzayabilir.
+Not: qwen3-vl'ye dogrudan JSON istendiginde dusunme ciktisinda takildigi gozlendi; bu yuzden yedek yolda qwen3-vl sadece duz OCR yapar. Iki modelin sirayla yuklenmesi 1-5 dk surdugu icin varsayilan yol tek modeldir. Uygulama acilisinda gemma4 arka planda bellege yuklenir (`Ai:WarmUpOnStartup`, varsayilan `true`; dusuk bellekli makinede `false` yapin).
+
+## 6.1 Azaltim senaryosu ve envanter raporu
+
+- `POST /api/targets/scenario`: kategori basina tuketim azaltim yuzdesi alir (`measures: [{categoryId, reductionPercent}]`), son 12 tam ayin onayli emisyonundan yillik tasarrufu ve aktif hedefe yetip yetmedigini hesaplar. 12 aydan az veri varsa tutarlar yilliga olceklenir (`isProjected`). Onlem basina tasarruf orani uydurulmaz; yuzdeyi kullanici girer.
+- `GET /api/reports/inventory?year=2026&format=pdf|xlsx`: yillik envanter ozeti. Yalnizca onayli kayitlar; kapsam, kategori (tuketim + katsayi), tesis ve ay kirilimi; dogrulanmis katsayi payi; Excel'de kayit kayit dokum (katsayi yili, kaynagi, giren, onaylayan). Rapor ucuncu taraf dogrulamasi iddia etmez.
 
 ## 7. Emisyon Katsayilari — ONEMLI
 
@@ -110,21 +128,21 @@ Her katsayi kaynagini ve dogrulanma durumunu saklar; uygulama bunu kayit detayin
 | Kategori | Kullanilan deger | Durum |
 |---|---|---|
 | Elektrik | **0,469 kgCO2e/kWh** (2023) | **Resmi.** ETKB, *Turkiye Elektrik Uretimi ve Elektrik Tuketim Noktasi Emisyon Faktorleri Bilgi Formu* (ETKB-EVCED-FRM-042), dagitim hattindan bagli tuketim noktasi |
-| Dogalgaz | 2,0 kgCO2e/m3 | **Yer tutucu, kaynaksiz** — sunumda "ornek katsayi" denmeli |
-| Motorin | 2,7 kgCO2e/L | **Yer tutucu, kaynaksiz** — sunumda "ornek katsayi" denmeli |
+| Dogalgaz | **1,939576 kgCO2e/m3** (2024) | **Resmi kaynakli.** IPCC 2006 Tablo 2.3 emisyon faktorleri × Turkiye Ulusal Envanter Belgesi (NID 2026) isil degeri 34,54 TJ/10^6 m3 × AR5 GWP |
+| Motorin | **2,673664 kgCO2e/L** (2024) | **Resmi kaynakli.** IPCC 2006 Tablo 2.3 × NID 2026 isil degeri 43,33 TJ/kt × 0,830 kg/L (Enerji Verimliligi Yonetmeligi EK-2) × AR5 GWP |
 
-Ilk surumdeki kaynaksiz elektrik degeri (0,5) pasife alindi; o degerle daha once hesaplanmis kayitlar degismez. Iletim hattina bagli tesisler icin resmi deger 0,436'dir (ayni belge).
+Ilk surumdeki kaynaksiz degerler (elektrik 0,5; dogalgaz 2,0; motorin 2,7) pasife alindi; o degerlerle daha once hesaplanmis kayitlar degismez. Iletim hattina bagli tesisler icin resmi elektrik degeri 0,436'dir (ayni belge).
 
-Dogalgaz / motorin icin dogrulanmis kaynak: IPCC 2006, Cilt 2, Bolum 2, Tablo 2.2: 56.100 / 74.100 kg CO2 per TJ (net isil deger). m3 veya litre basina cevirmek icin yakitin isil degeri gerekir; bu donusum henuz yapilmadi.
+Dogalgaz / motorin hesabinin adim adim dokumu, sayfa numaralari ve sinirlari (ulusal ortalama isil deger; NID'nin kendi CO2 faktorleriyle fark): `KAYNAKLAR.md` bolum 5.1.
 
 Dikkat: ETKB'nin OM/BM/CM degerlerini iceren *Ulusal Elektrik Sebekesi Emisyon Faktoru* formu yenilenebilir enerji projelerinin azaltim hesabi icindir; Scope 2 tuketim emisyonu icin kullanilmaz.
 
-Katsayilar `POST /api/factors/custom` (SuperAdmin) ile eklenir; `source` alani zorunludur (kaynaksiz katsayi girilemez). Her emisyon kaydi hesaplandigi katsayiyi saklar, bu yuzden katsayi degisikligi eski kayitlari degistirmez. Bir kaydin katsayisi, faaliyet doneminin yilina esit veya daha onceki en guncel **aktif** katsayidir; 2023 oncesi elektrik donemleri icin katsayi tanimli olmadigindan kayit olusturulamaz.
+Katsayilar `POST /api/factors/custom` (SuperAdmin) ile eklenir; `source` alani zorunludur (kaynaksiz katsayi girilemez). Her emisyon kaydi hesaplandigi katsayiyi saklar, bu yuzden katsayi degisikligi eski kayitlari degistirmez. Bir kaydin katsayisi, faaliyet doneminin yilina esit veya daha onceki en guncel **aktif** katsayidir; 2023 oncesi elektrik ve 2024 oncesi dogalgaz/motorin donemleri icin katsayi tanimli olmadigindan kayit olusturulamaz.
 
 ## 8. Bilinen Eksikler
 
 - E-posta servisi yok (davet, sifre sifirlama, tedarikci daveti).
-- ISO 14064 / GHG Protocol PDF raporu yok; ilgili uclar acik hata doner. Veri CSV olarak alinabilir.
+- ISO 14064 / GHG Protocol sablonlu dogrulama raporu yok (ilgili uclar acik hata doner); yerine kurum ici yillik envanter ozeti `GET /api/reports/inventory` (PDF/Excel) vardir.
 - AI fatura okuma sadece gorsel (png/jpg/webp) kabul eder; PDF desteklenmez.
 - Odeme entegrasyonu yok; paket yukseltmede fatura "Pending" olusur.
 - Karbon kredileri tCO2e, emisyonlar kgCO2e cinsindendir.

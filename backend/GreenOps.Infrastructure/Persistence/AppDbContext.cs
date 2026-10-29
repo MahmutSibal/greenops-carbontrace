@@ -466,15 +466,16 @@ public class AppDbContext : DbContext
                 IsVerified = true,
                 IsActive = true
             },
+            // İlk sürümün kaynaksız doğalgaz/motorin değerleri: elektrikteki gibi denetim izi için saklanır, pasif.
             new ConversionFactor
             {
                 Id = Guid.Parse("55555555-5555-5555-5555-555555555555"),
                 CategoryId = naturalGasId,
                 Year = 2026,
                 Factor = 2.0m,
-                Source = placeholderSource,
+                Source = placeholderSource + " IPCC 2006 + Türkiye NID 2026 ısıl değeriyle değiştirildi.",
                 IsVerified = false,
-                IsActive = true
+                IsActive = false
             },
             new ConversionFactor
             {
@@ -482,8 +483,35 @@ public class AppDbContext : DbContext
                 CategoryId = dieselId,
                 Year = 2026,
                 Factor = 2.7m,
-                Source = placeholderSource,
+                Source = placeholderSource + " IPCC 2006 + Türkiye NID 2026 ısıl değeriyle değiştirildi.",
                 IsVerified = false,
+                IsActive = false
+            },
+            // Yakıt yakma (Kapsam 1): IPCC 2006 Cilt 2 Bölüm 2 Tablo 2.3 (imalat sanayi) emisyon faktörleri
+            // × Türkiye Ulusal Envanter Belgesi (NID 2026, 1990-2024) Ek "NCV of Fuels" 2024 ısıl değeri × AR5 GWP
+            // (CH4 28, N2O 265; NID'nin kullandığı set). Hesap ve sayfa numaraları: KAYNAKLAR.md bölüm 5.
+            // Doğalgaz: 34,54 TJ/10^6 m3 × (56.100 + 1×28 + 0,1×265) kg/TJ = 1,939576 kgCO2e/m3.
+            new ConversionFactor
+            {
+                Id = Guid.Parse("88888888-8888-8888-8888-888888888888"),
+                CategoryId = naturalGasId,
+                Year = 2024,
+                Factor = 1.939576m,
+                Source = "Emisyon faktörü: 2006 IPCC Guidelines, Cilt 2, Bölüm 2, Tablo 2.3 (CO2 56.100, CH4 1, N2O 0,1 kg/TJ). Isıl değer: Türkiye Ulusal Sera Gazı Envanter Belgesi (NID 2026, 1990-2024), Ek \"NCV of Fuels\", 2024: 34,54 TJ/10^6 m3. GWP: IPCC AR5 (CH4 28, N2O 265).",
+                SourceUrl = "https://unfccc.int/sites/default/files/resource/TUR_NID_2026.pdf",
+                IsVerified = true,
+                IsActive = true
+            },
+            // Motorin: 43,33 TJ/kt × 0,830 kg/L × (74.100 + 3×28 + 0,6×265) kg/TJ = 2,673664 kgCO2e/L.
+            new ConversionFactor
+            {
+                Id = Guid.Parse("99999999-9999-9999-9999-999999999999"),
+                CategoryId = dieselId,
+                Year = 2024,
+                Factor = 2.673664m,
+                Source = "Emisyon faktörü: 2006 IPCC Guidelines, Cilt 2, Bölüm 2, Tablo 2.3 (CO2 74.100, CH4 3, N2O 0,6 kg/TJ). Isıl değer: Türkiye NID 2026, Ek \"NCV of Fuels\", 2024: motorin 43,33 TJ/kt. Yoğunluk: Enerji Kaynaklarının ve Enerjinin Kullanımında Verimliliğin Artırılmasına Dair Yönetmelik EK-2 (RG 27.10.2011/28097): 0,830 kg/L. GWP: IPCC AR5.",
+                SourceUrl = "https://unfccc.int/sites/default/files/resource/TUR_NID_2026.pdf",
+                IsVerified = true,
                 IsActive = true
             }
         );

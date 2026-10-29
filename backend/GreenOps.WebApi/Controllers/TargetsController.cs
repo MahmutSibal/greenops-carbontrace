@@ -46,6 +46,17 @@ public class TargetsController : ApiControllerBase
         if (!result.IsSuccess) return BadRequest(new { error = result.Error });
         return Ok(result.Value);
     }
+
+    /// <summary>POST /api/targets/scenario — Kategori bazlı azaltım senaryosu (son 12 ayın onaylı verisiyle; kayıt oluşturmaz)</summary>
+    [HttpPost("scenario")]
+    public async Task<IActionResult> Scenario([FromBody] ScenarioRequest request, CancellationToken ct)
+    {
+        if (!TryResolveCompany(request.CompanyId, out var cid)) return CompanyForbidden();
+        request.CompanyId = cid;
+        var result = await _targetService.SimulateScenarioAsync(request, ct);
+        if (!result.IsSuccess) return BadRequest(new { error = result.Error });
+        return Ok(result.Value);
+    }
 }
 
 [Route("api/carbon-credits")]

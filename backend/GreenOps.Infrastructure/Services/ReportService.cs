@@ -3,6 +3,7 @@ using GreenOps.Application.Abstractions.Services;
 using GreenOps.Application.Common;
 using GreenOps.Domain.Entities;
 using GreenOps.Infrastructure.Persistence;
+using GreenOps.Infrastructure.Reports;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenOps.Infrastructure.Services;
@@ -74,6 +75,23 @@ public class ReportService : IReportService
         return value.IndexOfAny(new[] { ',', '"', '\n', '\r' }) >= 0
             ? $"\"{value.Replace("\"", "\"\"")}\""
             : value;
+    }
+
+    public async Task<Result<ReportFile>> ExportInventoryAsync(Guid companyId, int year, string format, CancellationToken cancellationToken = default)
+    {
+        if (year < 1990 || year > DateTimeOffset.UtcNow.Year)
+            return Result<ReportFile>.Failure("Geçersiz rapor yılı.");
+        if (format is not ("pdf" or "xlsx"))
+            return Result<ReportFile>.Failure("Biçim pdf veya xlsx olmalıdır.");
+
+        var report = await InventoryReport.BuildAsync(_dbContext, companyId, year, cancellationToken);
+        if (report is null)
+            return Result<ReportFile>.Failure("Şirket bulunamadı.");
+
+        var fileName = $"envanter_{year}_{DateTime.UtcNow:yyyyMMdd}.{format}";
+        return Result<ReportFile>.Success(format == "pdf"
+            ? new ReportFile(report.ToPdf(), "application/pdf", fileName)
+            : new ReportFile(report.ToXlsx(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName));
     }
 
     public async Task<Result<IReadOnlyList<ReportHistoryDto>>> GetHistoryAsync(Guid companyId, CancellationToken cancellationToken = default)

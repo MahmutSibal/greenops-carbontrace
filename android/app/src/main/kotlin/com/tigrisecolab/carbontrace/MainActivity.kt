@@ -1,4 +1,4 @@
-package com.example.greenops_carbontrace
+package com.tigrisecolab.carbontrace
 
 import io.flutter.embedding.android.FlutterActivity
 

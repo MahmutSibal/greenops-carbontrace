@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -5,8 +7,16 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Release imzası android/key.properties'ten okunur (depoya girmez; bkz. README "Release derlemesi").
+// Dosya yoksa release, debug anahtarıyla imzalanır: emulator'de çalışır ama dağıtıma uygun değildir.
+val keystoreProperties = Properties().apply {
+    val file = rootProject.file("key.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+val hasReleaseKey = keystoreProperties.getProperty("storeFile") != null
+
 android {
-    namespace = "com.example.greenops_carbontrace"
+    namespace = "com.tigrisecolab.carbontrace"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
@@ -20,20 +30,21 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.greenops_carbontrace"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        applicationId = "com.tigrisecolab.carbontrace"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
-    packaging {
-        jniLibs {
-            // Prevent flaky stripDebugDebugSymbols failures on Windows by keeping symbols in debug artifacts.
-            keepDebugSymbols += "**/*.so"
+    signingConfigs {
+        if (hasReleaseKey) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+                storePassword = keystoreProperties.getProperty("storePassword")
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+            }
         }
     }
 
@@ -43,13 +54,19 @@ android {
         }
 
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName(if (hasReleaseKey) "release" else "debug")
         }
     }
 }
 
 flutter {
     source = "../.."
+}
+
+// Windows'ta ara sıra başarısız olan stripDebugDebugSymbols adımını yalnızca debug'da atla.
+// (Bu ayar tüm derlemelere uygulanınca release APK sembollerle ~490 MB oluyordu.)
+androidComponents {
+    onVariants(selector().withBuildType("debug")) { variant ->
+        variant.packaging.jniLibs.keepDebugSymbols.add("**/*.so")
+    }
 }

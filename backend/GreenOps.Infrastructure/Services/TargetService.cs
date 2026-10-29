@@ -136,6 +136,93 @@ public class TargetService : ITargetService
         });
     }
 
+    public async Task<Result<ScenarioResultDto>> SimulateScenarioAsync(ScenarioRequest request, CancellationToken cancellationToken = default)
+    {
+        if (request.Measures.Count > 20)
+            return Result<ScenarioResultDto>.Failure("En fazla 20 önlem girilebilir.");
+        if (request.Measures.Any(m => m.ReductionPercent < 0 || m.ReductionPercent > 100))
+            return Result<ScenarioResultDto>.Failure("Azaltım yüzdesi 0-100 arasında olmalıdır.");
+        if (request.Measures.Any(m => m.Label?.Length > 100))
+            return Result<ScenarioResultDto>.Failure("Önlem adı en fazla 100 karakter olabilir.");
+        if (request.Measures.GroupBy(m => m.CategoryId).Any(g => g.Count() > 1))
+            return Result<ScenarioResultDto>.Failure("Her kategori için tek önlem girilebilir.");
+
+        // Son 12 tam ay: yarım kalan bu ay, yıllık değeri olduğundan düşük gösterirdi.
+        var now = DateTimeOffset.UtcNow;
+        var windowEnd = new DateTimeOffset(now.Year, now.Month, 1, 0, 0, 0, TimeSpan.Zero);
+        var windowStart = windowEnd.AddYears(-1);
+
+        var rows = await _dbContext.EmissionEntries.AsNoTracking()
+            .Where(e => e.CompanyId == request.CompanyId && e.Status == EmissionEntryStatus.Approved && !e.IsDeleted
+                        && (e.PeriodStart ?? e.CreatedAt) >= windowStart && (e.PeriodStart ?? e.CreatedAt) < windowEnd)
+            .Select(e => new
+            {
+                Date = e.PeriodStart ?? e.CreatedAt,
+                e.CategoryId,
+                Category = e.Category!.Name,
+                Unit = e.Unit ?? e.Category!.Unit,
+                Scope = (int?)e.Category!.Scope!.Number,
+                e.Value,
+                e.CalculationResult
+            })
+            .ToListAsync(cancellationToken);
+
+        // Hedef yıllıktır; 12 aydan az veri varsa, veri olan ayların ortalamasıyla 12 aya ölçeklenir
+        // (birkaç aylık toplamı yıllık hedefle kıyaslamak yapay olarak "hedef karşılanıyor" sonucu verir).
+        var monthsWithData = rows.Select(r => (r.Date.Year, r.Date.Month)).Distinct().Count();
+        var annualize = monthsWithData is > 0 and < 12 ? 12m / monthsWithData : 1m;
+
+        var measures = request.Measures.ToDictionary(m => m.CategoryId);
+        var categories = rows
+            .GroupBy(r => r.CategoryId)
+            .Select(g =>
+            {
+                measures.TryGetValue(g.Key, out var m);
+                var emissions = g.Sum(x => x.CalculationResult) * annualize;
+                var pct = m?.ReductionPercent ?? 0;
+                return new ScenarioCategoryDto
+                {
+                    CategoryId = g.Key,
+                    CategoryName = g.First().Category,
+                    Scope = g.First().Scope,
+                    Consumption = Math.Round(g.Sum(x => x.Value) * annualize, 1),
+                    Unit = g.First().Unit,
+                    Emissions = Math.Round(emissions, 1),
+                    ReductionPercent = pct,
+                    // Emisyon = tüketim × sabit katsayı olduğundan tüketimdeki % azalma emisyona aynen yansır.
+                    Saving = Math.Round(emissions * pct / 100m, 1),
+                    Label = m?.Label
+                };
+            })
+            .OrderByDescending(c => c.Emissions)
+            .ToList();
+
+        var baseline = categories.Sum(c => c.Emissions);
+        var saving = categories.Sum(c => c.Saving);
+
+        var target = await _dbContext.Targets.AsNoTracking()
+            .Where(t => t.CompanyId == request.CompanyId && t.IsActive)
+            .OrderByDescending(t => t.TargetYear)
+            .Select(t => new { t.TargetYear, Emissions = t.BaselineEmissions * (1 - t.ReductionPercent / 100m) })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return Result<ScenarioResultDto>.Success(new ScenarioResultDto
+        {
+            WindowStart = windowStart,
+            WindowEnd = windowEnd,
+            MonthsWithData = monthsWithData,
+            IsProjected = annualize != 1m,
+            BaselineEmissions = baseline,
+            ReducedEmissions = baseline - saving,
+            TotalSaving = saving,
+            SavingPercent = baseline > 0 ? Math.Round(saving / baseline * 100, 1) : 0,
+            TargetEmissions = target is null ? null : Math.Round(target.Emissions, 1),
+            TargetYear = target?.TargetYear,
+            MeetsTarget = target is null || baseline == 0 ? null : baseline - saving <= target.Emissions,
+            Categories = categories
+        });
+    }
+
     public async Task<Result> PurchaseCarbonCreditAsync(PurchaseCreditRequest request, CancellationToken cancellationToken = default)
     {
         if (request.Credits <= 0)

@@ -50,6 +50,29 @@ class CompanyServices {
         'Hedef oluşturulamadı',
       );
 
+  /// Kategori bazlı azaltım senaryosu: {categoryId: yüzde}. Boş harita mevcut durumu (yıllık) döndürür.
+  static Future<ApiResult<Map<String, dynamic>>> scenario(String? companyId, Map<String, double> measures) async {
+    final r = await ApiClient.post('/targets/scenario', {
+      'companyId': ?companyId,
+      'measures': [
+        for (final e in measures.entries) {'categoryId': e.key, 'reductionPercent': e.value},
+      ],
+    });
+    if (!ApiClient.isOk(r)) return ApiResult.fail(ApiClient.errorOf(r, 'Senaryo hesaplanamadı'));
+    return ApiResult.ok(Map<String, dynamic>.from(ApiClient.decode(r)));
+  }
+
+  // ── Raporlar ──
+  /// Yıllık envanter dosyası (format: pdf | xlsx). Başarılıysa dosya baytları.
+  static Future<ApiResult<List<int>>> inventoryReport(String? companyId, int year, String format) async {
+    final r = await ApiClient.get(
+      '/reports/inventory?year=$year&format=$format${companyId == null ? '' : '&companyId=$companyId'}',
+      timeout: const Duration(seconds: 60),
+    );
+    if (!ApiClient.isOk(r)) return ApiResult.fail(ApiClient.errorOf(r, 'Rapor oluşturulamadı'));
+    return ApiResult.ok(r.bodyBytes);
+  }
+
   // ── Kullanıcılar ──
   static Future<ApiResult<List<Map<String, dynamic>>>> users(String? companyId) =>
       _list('/users${_q(companyId)}', 'Kullanıcılar yüklenemedi');

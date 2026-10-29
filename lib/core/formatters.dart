@@ -28,6 +28,14 @@ class Fmt {
 
   static String integer(num? v) => _num0.format(v ?? 0);
 
+  /// Backend kategori adının (İngilizce seed) Türkçe karşılığı.
+  static String category(String name) => switch (name) {
+    'Electricity' => 'Elektrik',
+    'Natural Gas' => 'Doğalgaz',
+    'Diesel' => 'Motorin',
+    _ => name,
+  };
+
   static String percent(num? v, {bool signed = false}) {
     final d = (v ?? 0).toDouble();
     final s = '%${_num1.format(d.abs())}';

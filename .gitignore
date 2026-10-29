@@ -61,3 +61,8 @@ backend/GreenOps.WebApi/appsettings.Development.json
 android/build/
 android/app/build/
 android/.kotlin/
+
+# Release imza anahtarı ve parolaları (yalnızca yerel; asla depoya girmez)
+android/key.properties
+*.jks
+*.keystore

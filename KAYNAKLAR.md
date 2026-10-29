@@ -39,6 +39,8 @@ Lisanslar, projede kullanılan **tam sürümün** NuGet paket tanımından (`.nu
 | FluentValidation (+ DependencyInjectionExtensions) | 11.9.0 | Apache-2.0 | https://www.nuget.org/packages/FluentValidation/11.9.0 |
 | BCrypt.Net-Next | 4.1.0 | MIT | https://www.nuget.org/packages/BCrypt.Net-Next/4.1.0 |
 | Swashbuckle.AspNetCore | 6.5.0 | MIT | https://www.nuget.org/packages/Swashbuckle.AspNetCore/6.5.0 |
+| QuestPDF (PDF envanter raporu) | 2024.12.3 | QuestPDF Community MIT | Paketle gelen `PackageLicense.md`: yıllık brüt geliri 1 milyon USD'nin altındaki şirketler, açık kaynak projeler ve eğitim amaçlı kullanım için ücretsiz; bu sınırın üstündeki şirketler ücretli lisans almalıdır. Kodda `QuestPDF.Settings.License = LicenseType.Community` ile beyan edilir. https://www.questpdf.com/license/ |
+| ClosedXML (Excel envanter raporu) | 0.104.2 | MIT | https://www.nuget.org/packages/ClosedXML/0.104.2 — bağımlılıkları DocumentFormat.OpenXml 3.1.1 (MIT), ExcelNumberFormat 1.1.0 (MIT), RBush 4.0.0 (MIT), SixLabors.Fonts 1.0.0 (Apache-2.0); lisanslar yerel `.nuspec` dosyalarından okundu |
 
 > **Uyarı — MediatR:** Projede kullanılan 11.1.0 sürümü Apache-2.0'dır. Ancak MediatR'ın güncel deposunun lisansı artık açık kaynak olarak tanımlanmamaktadır (GitHub lisans API'si: `NOASSERTION`, https://github.com/LuckyPennySoftware/MediatR/blob/main/LICENSE.md). **MediatR sürümü yükseltilmeden önce yeni sürümün lisansı incelenmelidir.**
 
@@ -59,6 +61,11 @@ Lisanslar, projede çözümlenen **tam sürümün** paket arşivindeki `LICENSE`
 | image_picker | 1.2.4 | BSD-3-Clause | https://pub.dev/packages/image_picker/license |
 | google_fonts | 6.3.2 | BSD-3-Clause | https://pub.dev/packages/google_fonts/license |
 | fl_chart | 0.68.0 | MIT | https://github.com/imaNNeo/fl_chart/blob/main/LICENSE |
+| share_plus (raporu paylaşma) | 13.3.1 | BSD-3-Clause | https://pub.dev/packages/share_plus/license |
+| flutter_launcher_icons (yalnızca geliştirme: simge üretimi) | 0.14.4 | MIT | https://pub.dev/packages/flutter_launcher_icons/license |
+
+### Uygulama simgesi
+Yaprak simgesi (`assets/icon/`) bu proje için PowerShell/System.Drawing ile çizildi; dış kaynaklı görsel içermez.
 
 ### Yazı tipi
 | Yazı tipi | Tasarımcı | Lisans | Doğrulama |
@@ -74,7 +81,7 @@ Lisanslar, projede çözümlenen **tam sürümün** paket arşivindeki `LICENSE`
 | Konu | Kaynak | Doğrulama |
 |---|---|---|
 | Kapsam (Scope 1/2/3) sınıflandırması | *GHG Protocol Corporate Accounting and Reporting Standard*, WRI ve WBCSD | https://ghgprotocol.org/corporate-standard |
-| Yakıt yakma varsayılan emisyon faktörleri | *2006 IPCC Guidelines for National Greenhouse Gas Inventories*, Cilt 2 (Enerji), Bölüm 2 (Sabit Yakma), Tablo 2.2 | https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf |
+| Yakıt yakma varsayılan emisyon faktörleri | *2006 IPCC Guidelines for National Greenhouse Gas Inventories*, Cilt 2 (Enerji), Bölüm 2 (Sabit Yakma), Tablo 2.2 ve 2.3 | https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/2_Volume2/V2_2_Ch2_Stationary_Combustion.pdf |
 
 ---
 
@@ -96,14 +103,34 @@ Belgeye göre tüketim noktası faktörleri "elektrik tüketimi kaynaklı karbon
 
 > **Karıştırılmaması gereken belge:** ETKB'nin *Türkiye Ulusal Elektrik Şebekesi Emisyon Faktörü Bilgi Formu* (ETKB-EVÇED-FRM-039; OM/BM/CM değerleri, ör. 2021 için birleşik marj 0,6345) UNFCCC CDM Tool 07 yöntemiyle hesaplanır. Belgenin kendisine göre bu değerler **yenilenebilir enerji üretimiyle sağlanacak sera gazı azaltımı** hesapları içindir; şirketin elektrik tüketiminden kaynaklanan Scope 2 emisyonu için kullanılmamalıdır.
 
-**Doğalgaz ve motorin — IPCC 2006, Cilt 2, Bölüm 2, Tablo 2.2 (net ısıl değer bazında, kg gaz / TJ)**
+**Doğalgaz ve motorin (Scope 1, sabit yakma) — IPCC 2006 emisyon faktörü × Türkiye ulusal ısıl değeri**
+
+Yöntem: katsayı (kgCO2e/birim) = ısıl değer (TJ/birim) × (CO2 + CH4 × 28 + N2O × 265) kg/TJ.
+
+(a) Emisyon faktörleri — *2006 IPCC Guidelines*, Cilt 2, Bölüm 2, Tablo 2.3 (imalat sanayi ve inşaat; net ısıl değer bazında, kg gaz/TJ). Aynı değerler Tablo 2.2'de (enerji endüstrileri) de aynıdır. Türkiye'nin envanter belgesi de 1.A.2 için bu tabloyu kullanır (NID 2026, Ek, s. 448).
 
 | Yakıt | CO2 | CH4 | N2O |
 |---|---|---|---|
 | Doğalgaz (Natural Gas) | 56.100 | 1 | 0,1 |
 | Motorin (Gas/Diesel Oil) | 74.100 | 3 | 0,6 |
 
-Bu değerler **enerji birimi (TJ) başınadır**. m³ veya litre başına katsayıya çevirmek için yakıtın ısıl değeri (ör. tedarikçinin faturada belirttiği ısıl değer veya ulusal envanterdeki değer) gerekir; bu dönüşüm henüz yapılmamıştır.
+(b) Isıl değerler — *Greenhouse Gas Inventory of Türkiye 1990-2024, National Inventory Document* (NID 2026, UNFCCC'ye sunulan resmi envanter), Ek "Emissions Factors used in the Energy Sector — NCV of Fuels", 2024 sütunu, belge s. 445: https://unfccc.int/sites/default/files/resource/TUR_NID_2026.pdf
+- Doğalgaz: **34,54 TJ/10⁶ m³** (= 34,54 MJ/m³). Çapraz kontrol: Enerji Verimliliği Yönetmeliği EK-2'deki 8.250 kcal/m³ × 4,1868 = 34,54 MJ/m³, aynı değer.
+- Motorin ("Diesel oil"): **43,33 TJ/kt**.
+
+(c) Motorin yoğunluğu (litreden kilograma) — *Enerji Kaynaklarının ve Enerjinin Kullanımında Verimliliğin Artırılmasına Dair Yönetmelik*, EK-2 (Resmî Gazete 27.10.2011, sayı 28097): motorin **0,830 kg/L**. https://www.resmigazete.gov.tr/eskiler/2011/10/20111027-5.htm — Yönetmelik 2022 ve 2024'te değiştirildi. Bulunan değişiklik özetlerinde EK-2 geçmiyor, ancak konsolide metin (mevzuat.gov.tr) ayrıca kontrol edilmedi.
+
+(d) GWP — IPCC AR5 (CH4 28, N2O 265). Türkiye NID 2026 da AR5 değerlerini kullanır (belgedeki örnek hesap: "28 and 265 are GWP values from AR5").
+
+| | Hesap | Sonuç |
+|---|---|---|
+| Doğalgaz | 34,54×10⁻⁶ TJ/m³ × (56.100 + 1×28 + 0,1×265) | **1,939576 kgCO2e/m³** (CO2 tek başına 1,937694) |
+| Motorin | 43,33×10⁻⁶ TJ/kg × 0,830 kg/L × (74.100 + 3×28 + 0,6×265) | **2,673664 kgCO2e/L** (CO2 tek başına 2,664925) |
+
+Sınırlar ve bilinmesi gerekenler:
+- Isıl değerler ulusal ortalamadır. Faturasında ısıl değer yazan bir tesis için tesise özgü değer daha doğrudur.
+- Doğalgaz CH4 faktörü imalat sanayi (Tablo 2.3) içindir. Ticari/kurumsal binalarda (Tablo 2.4) doğalgaz CH4 5 kg/TJ'dir; fark katsayının yaklaşık %0,2'sidir.
+- NID kendi hesabında doğalgaz için ülkeye özgü CO2 faktörü (2024: 55,89 t/TJ, s. 446) ve motorin için 72,3 t/TJ kullanır (s. 447, "Default CO2 Emission Factors"). Biz yöntem olarak IPCC 2006 varsayılan faktörlerini seçtik. NID değerleriyle katsayılar doğalgazda yaklaşık %0,4, motorinde yaklaşık %2,4 daha düşük çıkardı.
 
 ### 5.2 Sistemde şu an kullanılan değerler
 
@@ -113,14 +140,16 @@ Her katsayı kaydı veritabanında kaynağını (`Source`, `SourceUrl`) ve resmi
 |---|---|---|---|
 | Elektrik | **0,469 kgCO2e/kWh** | 2023 | **Resmi — doğrulandı.** ETKB-EVÇED-FRM-042, dağıtım hattından bağlı tüketim noktası (bkz. 5.1) |
 | Elektrik | 0,5 kgCO2e/kWh | 2026 | Kaynaksız ilk sürüm değeri — **pasif**. Yeni hesaplamalarda kullanılmaz; bu değerle daha önce hesaplanmış kayıtların denetim izi için silinmedi. |
-| Doğalgaz | 2,0 kgCO2e/m³ | 2026 | **Yer tutucu — kaynağı yok** |
-| Motorin | 2,7 kgCO2e/L | 2026 | **Yer tutucu — kaynağı yok** |
+| Doğalgaz | **1,939576 kgCO2e/m³** | 2024 | **Resmi kaynaklı — doğrulandı.** IPCC 2006 Tablo 2.3 × NID 2026 ısıl değeri × AR5 (bkz. 5.1) |
+| Motorin | **2,673664 kgCO2e/L** | 2024 | **Resmi kaynaklı — doğrulandı.** IPCC 2006 Tablo 2.3 × NID 2026 ısıl değeri × 0,830 kg/L × AR5 (bkz. 5.1) |
+| Doğalgaz | 2,0 kgCO2e/m³ | 2026 | Kaynaksız ilk sürüm değeri — **pasif** |
+| Motorin | 2,7 kgCO2e/L | 2026 | Kaynaksız ilk sürüm değeri — **pasif** |
 
 Hesaplama kuralı: bir kaydın katsayısı, kategorideki **aktif** katsayılar arasından faaliyet döneminin yılına eşit veya daha önceki **en güncel** yıla göre seçilir. Bu yüzden 2024–2026 dönemi elektrik kayıtları, yayımlanmış en güncel resmi değer olan 2023 katsayısıyla hesaplanır ve detayda "2023" olarak görünür. 2023'ten önceki dönemler için elektrik katsayısı tanımlı olmadığından sistem kayıt oluşturmaz, açık hata verir (geriye doğru değer uydurulmaz).
 
 Önemli:
 - Bu değişiklikten **önce** oluşturulmuş elektrik kayıtları 0,5 katsayısıyla hesaplanmış olarak kalır; her kayıt hesaplandığı katsayıyı saklar. Demoda yalnızca resmi katsayıyla hesaplanmış veri göstermek için demo kayıtları yeniden oluşturulmalıdır.
-- Doğalgaz ve motorin değerleri sunumda kullanılacaksa "örnek katsayı" olduğu açıkça belirtilmelidir.
+- Doğalgaz ve motorin için 2024'ten önceki dönemlere katsayı tanımlı değildir; bu dönemler için kayıt oluşturulamaz. Pasif yer tutucularla daha önce hesaplanmış kayıtlar eski değerleriyle kalır.
 - Katsayılar `POST /api/factors/custom` (SuperAdmin) ile eklenir; bu uç artık **kaynak alanı olmadan katsayı kabul etmez**.
 
 ---

@@ -457,9 +457,9 @@ namespace GreenOps.Infrastructure.Persistence.Migrations
                             Id = new Guid("55555555-5555-5555-5555-555555555555"),
                             CategoryId = new Guid("22222222-2222-2222-2222-222222222222"),
                             Factor = 2.0m,
-                            IsActive = true,
+                            IsActive = false,
                             IsVerified = false,
-                            Source = "Geliştirme yer tutucusu — resmi bir kaynağa dayanmaz (bkz. KAYNAKLAR.md bölüm 5.2).",
+                            Source = "Geliştirme yer tutucusu — resmi bir kaynağa dayanmaz (bkz. KAYNAKLAR.md bölüm 5.2). IPCC 2006 + Türkiye NID 2026 ısıl değeriyle değiştirildi.",
                             Year = 2026
                         },
                         new
@@ -467,10 +467,32 @@ namespace GreenOps.Infrastructure.Persistence.Migrations
                             Id = new Guid("66666666-6666-6666-6666-666666666666"),
                             CategoryId = new Guid("33333333-3333-3333-3333-333333333333"),
                             Factor = 2.7m,
-                            IsActive = true,
+                            IsActive = false,
                             IsVerified = false,
-                            Source = "Geliştirme yer tutucusu — resmi bir kaynağa dayanmaz (bkz. KAYNAKLAR.md bölüm 5.2).",
+                            Source = "Geliştirme yer tutucusu — resmi bir kaynağa dayanmaz (bkz. KAYNAKLAR.md bölüm 5.2). IPCC 2006 + Türkiye NID 2026 ısıl değeriyle değiştirildi.",
                             Year = 2026
+                        },
+                        new
+                        {
+                            Id = new Guid("88888888-8888-8888-8888-888888888888"),
+                            CategoryId = new Guid("22222222-2222-2222-2222-222222222222"),
+                            Factor = 1.939576m,
+                            IsActive = true,
+                            IsVerified = true,
+                            Source = "Emisyon faktörü: 2006 IPCC Guidelines, Cilt 2, Bölüm 2, Tablo 2.3 (CO2 56.100, CH4 1, N2O 0,1 kg/TJ). Isıl değer: Türkiye Ulusal Sera Gazı Envanter Belgesi (NID 2026, 1990-2024), Ek \"NCV of Fuels\", 2024: 34,54 TJ/10^6 m3. GWP: IPCC AR5 (CH4 28, N2O 265).",
+                            SourceUrl = "https://unfccc.int/sites/default/files/resource/TUR_NID_2026.pdf",
+                            Year = 2024
+                        },
+                        new
+                        {
+                            Id = new Guid("99999999-9999-9999-9999-999999999999"),
+                            CategoryId = new Guid("33333333-3333-3333-3333-333333333333"),
+                            Factor = 2.673664m,
+                            IsActive = true,
+                            IsVerified = true,
+                            Source = "Emisyon faktörü: 2006 IPCC Guidelines, Cilt 2, Bölüm 2, Tablo 2.3 (CO2 74.100, CH4 3, N2O 0,6 kg/TJ). Isıl değer: Türkiye NID 2026, Ek \"NCV of Fuels\", 2024: motorin 43,33 TJ/kt. Yoğunluk: Enerji Kaynaklarının ve Enerjinin Kullanımında Verimliliğin Artırılmasına Dair Yönetmelik EK-2 (RG 27.10.2011/28097): 0,830 kg/L. GWP: IPCC AR5.",
+                            SourceUrl = "https://unfccc.int/sites/default/files/resource/TUR_NID_2026.pdf",
+                            Year = 2024
                         });
                 });
 
