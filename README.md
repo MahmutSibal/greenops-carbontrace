@@ -221,32 +221,6 @@ Excel tabanli manuel veri toplama yontemleri, Scope 3 emisyonlarinin olcum zorlu
 
 Yerel platformlar; Turkiye Iklim Kanunu'na hizli adaptasyon, maliyet avantaji ve veri egemenligi acisindan stratejik kaldirac gorevi gorebilir.
 
-### 10.5 Demokratik Yonetisim: Yerel Iklim Politikalari ve Sivil Katilim
-
-Iklim degisikligi ile mucadele, yalnizca teknokratik bir surec degil; seffaflik ve hesap verebilirlik temelli bir demokratik yonetisim alanidir.
-
-Ilgili hukuki cerceve:
-
-- 5393 sayili Belediye Kanunu, Madde 13 (Hemsehri hukuku): hemsehrilerin belediye karar ve hizmetlerine katilma ve belediye faaliyetleri hakkinda bilgilenme hakki [3]
-- 4982 sayili Bilgi Edinme Hakki Kanunu [4]
-
-#### Yerel Yonetim Butce ve Izleme Takvimi (5393 sayili Kanun'a gore)
-
-- **1 Eylul'den once:** Belediye baskaninin hazirladigi butce tasarisi encumene sunulur (Madde 62) [3]
-- **1 Kasim'dan once:** Encumen, butceyi gorusuyle birlikte belediye meclisine sunar (Madde 62) [3]
-- **Yilbasindan once:** Meclis butceyi aynen veya degistirerek kabul eder (Madde 62) [3]
-- **Nisan ayi toplantisi:** Faaliyet raporu belediye baskani tarafindan meclise sunulur ve kamuoyuna aciklanir (Madde 56) [3]
-
-### 10.6 Sonuc ve Stratejik Cagri: Genc TUYAFED Icin Eylem Plani
-
-2026 stratejik ufku, teknik yetkinligi demokratik denetimle birlestiren liderler icin guclu firsatlar barindirmaktadir. Genc TUYAFED uyeleri icin uc temel oncelik asagidadir:
-
-1. Teknik yetkinlik ve sertifikasyon: TS EN ISO 14067 ve ISO 14064 standartlarinda urun ve kurumsal karbon ayak izi hesaplamasinda uzmanlasma.
-2. Dijital donusum ve yerli yazilim savunuculugu: Excel bagimliligini azaltan, kurumsal entegrasyona uygun yerli platformlara liderlik.
-3. Veriye dayali yerel denetim: 5393 sayili Kanun'daki butce takvimi (Eylul–Aralik) ve Nisan faaliyet raporu donemlerinde, Bilgi Edinme Hakki Kanunu'ndan da yararlanarak iklim taahhutlerinin izlenmesi.
-
-2026'nin kazananlari, regulasyonlari engel olarak degil stratejik mimarilerinin temel tasi olarak konumlandirabilenler olacaktir.
-
 ### 10.7 Kaynaklar (birincil, 29 Ekim 2026 itibariyla erisildi)
 
 1. Avrupa Komisyonu, Vergilendirme ve Gumruk Birligi Genel Mudurlugu — *Carbon Border Adjustment Mechanism*: "CBAM applies in its definitive regime from 1 January 2026"; sektorler: cement, iron and steel, aluminium, fertilisers, electricity and hydrogen. https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism_en
