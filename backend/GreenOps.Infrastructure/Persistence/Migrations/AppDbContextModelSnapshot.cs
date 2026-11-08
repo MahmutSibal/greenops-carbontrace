@@ -678,6 +678,87 @@ namespace GreenOps.Infrastructure.Persistence.Migrations
                     b.ToTable("EmissionEntries");
                 });
 
+            modelBuilder.Entity("GreenOps.Domain.Entities.ExportCarbonPassport", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<decimal>("DataReliabilityPercent")
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<decimal>("EmissionsPerUnitKg")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("ProductCode")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTimeOffset>("ProductionEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("ProductionStart")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("PublicTokenHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("QuantityUnit")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTimeOffset?>("RevokedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ShipmentReference")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("TotalEmissionsKg")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("PublicTokenHash")
+                        .IsUnique();
+
+                    b.ToTable("ExportCarbonPassports");
+                });
+
+            modelBuilder.Entity("GreenOps.Domain.Entities.ExportCarbonPassportEntry", b =>
+                {
+                    b.Property<Guid>("PassportId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EmissionEntryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PassportId", "EmissionEntryId");
+
+                    b.HasIndex("EmissionEntryId");
+
+                    b.ToTable("ExportCarbonPassportEntries");
+                });
+
             modelBuilder.Entity("GreenOps.Domain.Entities.Facility", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1399,6 +1480,36 @@ namespace GreenOps.Infrastructure.Persistence.Migrations
                     b.Navigation("RejectedByUser");
                 });
 
+            modelBuilder.Entity("GreenOps.Domain.Entities.ExportCarbonPassport", b =>
+                {
+                    b.HasOne("GreenOps.Domain.Entities.Company", "Company")
+                        .WithMany("ExportCarbonPassports")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("GreenOps.Domain.Entities.ExportCarbonPassportEntry", b =>
+                {
+                    b.HasOne("GreenOps.Domain.Entities.EmissionEntry", "EmissionEntry")
+                        .WithMany()
+                        .HasForeignKey("EmissionEntryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("GreenOps.Domain.Entities.ExportCarbonPassport", "Passport")
+                        .WithMany("Entries")
+                        .HasForeignKey("PassportId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("EmissionEntry");
+
+                    b.Navigation("Passport");
+                });
+
             modelBuilder.Entity("GreenOps.Domain.Entities.Facility", b =>
                 {
                     b.HasOne("GreenOps.Domain.Entities.Company", "Company")
@@ -1565,6 +1676,8 @@ namespace GreenOps.Infrastructure.Persistence.Migrations
 
                     b.Navigation("Documents");
 
+                    b.Navigation("ExportCarbonPassports");
+
                     b.Navigation("Facilities");
 
                     b.Navigation("Invoices");
@@ -1590,6 +1703,11 @@ namespace GreenOps.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("GreenOps.Domain.Entities.EmissionEntry", b =>
                 {
                     b.Navigation("Documents");
+                });
+
+            modelBuilder.Entity("GreenOps.Domain.Entities.ExportCarbonPassport", b =>
+                {
+                    b.Navigation("Entries");
                 });
 
             modelBuilder.Entity("GreenOps.Domain.Entities.Facility", b =>

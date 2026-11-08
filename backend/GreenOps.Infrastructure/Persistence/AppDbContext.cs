@@ -37,6 +37,8 @@ public class AppDbContext : DbContext
     public DbSet<IotDevice> IotDevices => Set<IotDevice>();
     public DbSet<IotMeterReading> IotMeterReadings => Set<IotMeterReading>();
     public DbSet<Report> Reports => Set<Report>();
+    public DbSet<ExportCarbonPassport> ExportCarbonPassports => Set<ExportCarbonPassport>();
+    public DbSet<ExportCarbonPassportEntry> ExportCarbonPassportEntries => Set<ExportCarbonPassportEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -52,6 +54,37 @@ public class AppDbContext : DbContext
             entity.Property(x => x.AnnualRevenue).HasColumnType("decimal(18,2)");
             // Kayıtta otomatik açılan şirketlerin vergi no'su boş gelir; onlar hariç tutulur.
             entity.HasIndex(x => x.TaxNo).IsUnique().HasFilter("[TaxNo] <> ''");
+        });
+
+        modelBuilder.Entity<ExportCarbonPassport>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.ProductName).IsRequired().HasMaxLength(200);
+            entity.Property(x => x.ProductCode).HasMaxLength(100);
+            entity.Property(x => x.ShipmentReference).HasMaxLength(100);
+            entity.Property(x => x.Quantity).HasColumnType("decimal(18,4)");
+            entity.Property(x => x.QuantityUnit).IsRequired().HasMaxLength(20);
+            entity.Property(x => x.TotalEmissionsKg).HasColumnType("decimal(18,4)");
+            entity.Property(x => x.EmissionsPerUnitKg).HasColumnType("decimal(18,4)");
+            entity.Property(x => x.DataReliabilityPercent).HasColumnType("decimal(5,2)");
+            entity.Property(x => x.PublicTokenHash).IsRequired().HasMaxLength(64);
+            entity.HasIndex(x => x.PublicTokenHash).IsUnique();
+            entity.HasOne(x => x.Company)
+                .WithMany(c => c.ExportCarbonPassports)
+                .HasForeignKey(x => x.CompanyId);
+        });
+
+        modelBuilder.Entity<ExportCarbonPassportEntry>(entity =>
+        {
+            entity.HasKey(x => new { x.PassportId, x.EmissionEntryId });
+            entity.HasOne(x => x.Passport)
+                .WithMany(p => p.Entries)
+                .HasForeignKey(x => x.PassportId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(x => x.EmissionEntry)
+                .WithMany()
+                .HasForeignKey(x => x.EmissionEntryId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Facility>(entity =>

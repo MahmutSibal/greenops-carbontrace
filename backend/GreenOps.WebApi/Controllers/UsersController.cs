@@ -113,7 +113,14 @@ public class UsersController : ApiControllerBase
         request.Role = role.ToString();
         var result = await _userService.InviteUserAsync(request, ct);
         if (!result.IsSuccess) return BadRequest(new { error = result.Error });
-        return Ok(new { message = "Kullanıcı oluşturuldu." });
+        return Ok(new
+        {
+            message = "Kullanıcı oluşturuldu.",
+            result.Value!.UserId,
+            result.Value.Email,
+            result.Value.TemporaryPassword,
+            result.Value.EmailDeliveryPending
+        });
     }
 
     /// <summary>PUT /api/users/{id}/status — Hesabı dondur/aktif et (SuperAdmin, CompanyAdmin)</summary>

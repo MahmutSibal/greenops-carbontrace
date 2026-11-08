@@ -145,36 +145,38 @@ public class UserService : IUserService
     }
 
     /// <remarks>Şirket ve rol yetkisi çağıran kontrolcüde doğrulanır.</remarks>
-    public async Task<Result> InviteUserAsync(InviteUserRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result<InviteUserResponse>> InviteUserAsync(InviteUserRequest request, CancellationToken cancellationToken = default)
     {
         var email = request.Email?.Trim() ?? string.Empty;
         if (email.Length is < 5 or > 200 || !email.Contains('@'))
-            return Result.Failure("Geçerli bir e-posta adresi giriniz.");
+            return Result<InviteUserResponse>.Failure("Geçerli bir e-posta adresi giriniz.");
 
         var fullName = request.FullName?.Trim() ?? string.Empty;
         if (fullName.Length is < 3 or > 200)
-            return Result.Failure("Ad Soyad 3-200 karakter olmalıdır.");
+            return Result<InviteUserResponse>.Failure("Ad Soyad 3-200 karakter olmalıdır.");
 
         if (!Enum.TryParse<UserRole>(request.Role, true, out var role))
-            return Result.Failure("Geçersiz rol.");
+            return Result<InviteUserResponse>.Failure("Geçersiz rol.");
 
         if (!await _dbContext.Companies.AnyAsync(c => c.Id == request.CompanyId, cancellationToken))
-            return Result.Failure("Şirket bulunamadı.");
+            return Result<InviteUserResponse>.Failure("Şirket bulunamadı.");
 
         var existing = await _userRepository.GetByEmailAsync(email, cancellationToken);
         if (existing is not null)
-            return Result.Failure("Bu e-posta adresi zaten kayıtlı.");
+            return Result<InviteUserResponse>.Failure("Bu e-posta adresi zaten kayıtlı.");
 
         var password = request.Password;
+        string? temporaryPassword = null;
         if (!string.IsNullOrWhiteSpace(password))
         {
             var passwordError = PasswordPolicy.Validate(password);
             if (passwordError is not null)
-                return Result.Failure(passwordError);
+                return Result<InviteUserResponse>.Failure(passwordError);
         }
         else
         {
-            password = Convert.ToBase64String(RandomNumberGenerator.GetBytes(16));
+            temporaryPassword = Convert.ToBase64String(RandomNumberGenerator.GetBytes(16)) + "A1";
+            password = temporaryPassword;
         }
 
         var user = new AppUser
@@ -192,9 +194,13 @@ public class UserService : IUserService
         await _userRepository.AddAsync(user, cancellationToken);
         await _userRepository.SaveChangesAsync(cancellationToken);
 
-        // TODO: Davet e-postası (şifre belirleme linki) gönderilmeli.
-
-        return Result.Success();
+        return Result<InviteUserResponse>.Success(new InviteUserResponse
+        {
+            UserId = user.Id,
+            Email = user.Email,
+            TemporaryPassword = temporaryPassword,
+            EmailDeliveryPending = true
+        });
     }
 
     public async Task<Result> ChangeUserStatusAsync(Guid userId, bool isActive, CancellationToken cancellationToken = default)

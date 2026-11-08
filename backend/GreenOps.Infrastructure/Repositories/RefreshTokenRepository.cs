@@ -13,6 +13,7 @@ public class RefreshTokenRepository : RepositoryBase<RefreshToken>, IRefreshToke
     {
         return await DbContext.RefreshTokens
             .Include(rt => rt.User)
+                .ThenInclude(u => u!.Company)
             .FirstOrDefaultAsync(rt => rt.Token == token && !rt.IsRevoked, cancellationToken);
     }
 

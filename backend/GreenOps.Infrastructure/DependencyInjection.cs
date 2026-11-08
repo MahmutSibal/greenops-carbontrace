@@ -71,6 +71,7 @@ public static class DependencyInjection
         services.AddScoped<IBillingService, BillingService>();
         services.AddScoped<IIntegrationService, IntegrationService>();
         services.AddScoped<IReportService, ReportService>();
+        services.AddScoped<IExportCarbonPassportService, ExportCarbonPassportService>();
 
         return services;
     }
