@@ -163,65 +163,7 @@ Katsayilar `POST /api/factors/custom` (SuperAdmin) ile eklenir; `source` alani z
 
 Bu repositoride acikca belirtilmis bir lisans dosyasi bulunmuyorsa, tum haklar proje sahibine aittir.
 
-## 10. 2026 Stratejik Ufuk: Turkiye'de Enerji Donusumu, Karbon Ekonomisi ve Genc Liderler Icin Yol Haritasi
-
-Bu bolum, teknik urun dokumantasyonuna ek olarak 2026 perspektifinde enerji donusumu, karbon ekonomisi ve yonetisim alaninda stratejik bir cerceve sunar. Olgusal bilgiler koseli parantezle numaralanmis ve bolum 10.7'deki birincil kaynaklara baglanmistir; digerleri yazarin degerlendirmesidir.
-
-### 10.1 Giris: 2026 Donum Noktasinda Kuresel ve Ulusal Durum Analizi
-
-2026 yili; kuresel hukuk ortaminda hizlanan iklim baskilari, evrilen jeopolitik ittifaklar ve ulus devletlerin stratejik yeniden konumlanmalarinin kesistigi belirleyici bir donum noktasi olarak degerlendirilmektedir. Bu tarih, yalnizca takvimsel bir gecis degil; enerji, sanayi ve surdurulebilirligin gelecegi hakkinda cesurca dusunmeyi zorunlu kilan yeni bir enerji caginin baslangicidir.
-
-Kuresel olcekte nukleer teknolojilerdeki canlanma, kritik mineraller uzerindeki sert rekabet ve sikilasan iklim regulasyonlari, piyasa egemenliginin yeni parametrelerini belirlemektedir. Turkiye acisindan bu surec; regulatif uyumu bir maliyet yukunden cikarip stratejik pazar hakimiyeti aracina donusturme firsatidir.
-
-Bu yeni duzende asagidaki iki unsur stratejik onkosul niteligindedir:
-
-- Uyum maliyeti optimizasyonu
-- Yesil finansman ekosistemine erisim
-
-Donusumu yalnizca takip eden degil, yasal ongoruyu kurumsal stratejisine entegre eden aktorler, kuresel deger zincirlerinde kalici yer edinecektir.
-
-### 10.2 Yeni Enerji Kaynaklari: Nukleer Ronesans ve Kritik Minerallerin Jeopolitigi
-
-Turkiye'nin nukleer enerji hedefi, nukleer enerjinin surdurulebilir enerji stratejilerinde guvenilir bir dayanak olarak yeniden mesruiyet kazanmasiyla es zamanli bir ivme yakalamistir. Ozellikle Kucuk Moduler Reaktorler (KMR/SMR) etrafindaki teknolojik gelismelerin, yeni lisanslama yollarini ve sinir otesi teknoloji transferini hizlandirmasi beklenmektedir.
-
-Nukleer enerji, Turkiye'nin AB Sinirda Karbon Duzenleme Mekanizmasi (CBAM) karsisinda ihracatciya dusuk karbonlu baz yuk elektrigi sunabilmesinin stratejik araclarindan biri olarak konumlanmaktadir.
-
-Enerji donusumunun hammadde ayaginda ise kritik mineraller icin yogun bir jeopolitik rekabet yasanmaktadir. Turkiye, transit ve isleme merkezi potansiyelini korurken ciddi yasal ve ESG/CSY gerilimleriyle de karsi karsiyadir. Ornek olarak, 7554 sayili Kanun'un 11. maddesiyle 3213 sayili Maden Kanunu'na eklenen Gecici Madde 45, tapuda zeytinlik olarak kayitli veya fiilen zeytinlik bulunan alanlarda belirli kosullarla madencilik faaliyetine izin vermistir [5]; bu duzenlemeye iliskin kamuoyu tartismasi, enerji guvenligi ile cevresel koruma arasindaki regulatif dengelemenin somut bir ornegidir.
-
-### 10.3 Karbon Ekonomisi: CBAM, Iklim Kanunu ve Yeni Ticaret Rejimi
-
-AB CBAM, 1 Ocak 2026 itibariyla kesin donemine (definitive regime) gecmistir [1]. Bu, Turk ihracatcisi icin karbon performansinin fiyat ve kalite kriterleri kadar belirleyici oldugu yeni bir donemi baslatmaktadir. CBAM'in kapsadigi sektorler sunlardir [1]:
-
-- Demir-celik
-- Cimento
-- Aluminyum
-- Gubre
-- Elektrik
-- Hidrojen
-
-Emisyon verisi sunamayan veya yuksek karbon ayak izine sahip firmalarin AB pazarinda ek maliyet ve rekabet dezavantaji riski artmaktadir.
-
-Turkiye'nin cevabi, 9 Temmuz 2025 tarihli ve 32951 sayili Resmi Gazete'de yayimlanan 7552 sayili Iklim Kanunu [2] ve bu kanunla kurulan Emisyon Ticaret Sistemi (ETS) cercevesinde sekillenmektedir. Kurumsal kapasite insasi icin TS EN ISO 14067 (urun karbon ayak izi) ve ISO 14064 (kurumsal sera gazi envanteri) standartlarinda yetkinlik kazanmak kritik bir adim olarak degerlendirilmektedir.
-
-### 10.4 Dijital Donusum: GreenOps ve CarbonTrace ile Kurumsal Karbon Yonetimi
-
-Excel tabanli manuel veri toplama yontemleri, Scope 3 emisyonlarinin olcum zorlugu ve denetlenebilir veri altyapisi eksikligi; kurumlar icin operasyonel ve hukuki riskler olusturmaktadir. Bu noktada yerel yazilim cozumleri, global urunlere gore maliyet ve veri egemenligi avantaji saglayabilir.
-
-#### GreenOps ve CarbonTrace Teknik Mimari Ozeti (mevcut durum)
-
-> Bu tablo kodda **gercekten bulunan** ozellikleri listeler. "Planlanan" sutunu henuz yapilmamis hedeflerdir; sunumlarda bu ayrim korunmalidir.
-
-| Bilesen | Mevcut (kodda calisan) | Planlanan |
-|---|---|---|
-| Mimari | .NET 8 katmanli mimari (Domain / Application / Infrastructure / WebApi), MediatR + FluentValidation | Tam CQRS ayrimi |
-| Veri katmani | SQL Server + EF Core, denetim icin degismez audit log | PostgreSQL destegi, Redis onbellek |
-| Veri toplama | Yerel AI ile fatura gorselinden okuma (qwen3-vl OCR + gemma4), CSV toplu yukleme, API anahtarli IoT sayac webhook'u | Enerji saglayici API baglantilari, PDF fatura okuma |
-| Metodoloji | GHG Protokolu kapsam (Scope 1/2/3) siniflandirmasi, faaliyet donemi ve kullanilan katsayinin kayitla birlikte saklanmasi | ISO 14064 / 14067 rapor ciktisi, dogrulanmis ulusal katsayi seti |
-| Guvenlik | BCrypt sifre, JWT + refresh token rotasyonu, TOTP 2FA, sirket (tenant) izolasyonu, rate limiting, hash'li API anahtarlari | Veritabani seviyesinde sifreleme (TDE / alan sifreleme) |
-
-Yerel platformlar; Turkiye Iklim Kanunu'na hizli adaptasyon, maliyet avantaji ve veri egemenligi acisindan stratejik kaldirac gorevi gorebilir.
-
-### 10.7 Kaynaklar (birincil, 29 Ekim 2026 itibariyla erisildi)
+### 10. Kaynaklar (birincil, 29 Ekim 2026 itibariyla erisildi)
 
 1. Avrupa Komisyonu, Vergilendirme ve Gumruk Birligi Genel Mudurlugu — *Carbon Border Adjustment Mechanism*: "CBAM applies in its definitive regime from 1 January 2026"; sektorler: cement, iron and steel, aluminium, fertilisers, electricity and hydrogen. https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism_en
 2. Resmi Gazete, 9 Temmuz 2025, Sayi 32951 — 7552 sayili Iklim Kanunu. https://www.resmigazete.gov.tr/eskiler/2025/07/20250709.htm
