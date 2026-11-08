@@ -13,12 +13,14 @@ public class UserRepository : RepositoryBase<AppUser>, IUserRepository
     {
         var normalized = email.Trim();
         return await DbContext.Users
+            .Include(u => u.Company)
             .FirstOrDefaultAsync(u => u.Email == normalized, cancellationToken);
     }
 
     public async Task<AppUser?> GetByPasswordResetTokenAsync(string tokenHash, CancellationToken cancellationToken = default)
     {
         return await DbContext.Users
+            .Include(u => u.Company)
             .FirstOrDefaultAsync(u => u.PasswordResetToken == tokenHash, cancellationToken);
     }
 }

@@ -40,7 +40,7 @@ public class AuthService : IAuthService
     public async Task<Result<LoginResponse>> LoginAsync(string email, string password, string? twoFactorCode = null, CancellationToken cancellationToken = default)
     {
         var user = await _userRepository.GetByEmailAsync(email, cancellationToken);
-        if (user is null || !user.IsActive)
+        if (user is null || !user.IsActive || (user.CompanyId.HasValue && (user.Company is null || !user.Company.IsActive)))
             return Result<LoginResponse>.Failure("Geçersiz e-posta veya şifre.");
 
         if (!PasswordHasher.Verify(password, user.PasswordHash, out var needsRehash))
@@ -118,7 +118,11 @@ public class AuthService : IAuthService
             return Result<LoginResponse>.Failure("Geçersiz veya süresi dolmuş refresh token.");
 
         var token = await _refreshTokenRepository.GetByTokenAsync(refreshToken, cancellationToken);
-        if (token is null || token.ExpiresAt < DateTimeOffset.UtcNow || token.User is null || !token.User.IsActive)
+        if (token is null
+            || token.ExpiresAt < DateTimeOffset.UtcNow
+            || token.User is null
+            || !token.User.IsActive
+            || (token.User.CompanyId.HasValue && (token.User.Company is null || !token.User.Company.IsActive)))
             return Result<LoginResponse>.Failure("Geçersiz veya süresi dolmuş refresh token.");
 
         // Rotasyon: kullanılan token bir daha kullanılamaz.
@@ -131,7 +135,7 @@ public class AuthService : IAuthService
     public async Task<Result> ForgotPasswordAsync(string email, CancellationToken cancellationToken = default)
     {
         var user = await _userRepository.GetByEmailAsync(email, cancellationToken);
-        if (user is null || !user.IsActive)
+        if (user is null || !user.IsActive || (user.CompanyId.HasValue && (user.Company is null || !user.Company.IsActive)))
             return Result.Success(); // Kullanıcı var/yok bilgisi verilmez.
 
         var resetToken = TokenHasher.NewUrlSafeToken();

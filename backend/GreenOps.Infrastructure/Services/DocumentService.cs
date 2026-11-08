@@ -38,7 +38,7 @@ public class DocumentService : IDocumentService
             CompanyId = companyId,
             FileName = Path.GetFileName(fileName),
             FileUrl = saved.Value!,
-            ContentType = contentType,
+            ContentType = ContentTypeForExtension(Path.GetExtension(fileName)),
             FileSizeBytes = fileSize,
             EmissionEntryId = emissionEntryId,
             CreatedAt = DateTimeOffset.UtcNow
@@ -89,4 +89,17 @@ public class DocumentService : IDocumentService
     }
 
     private static string DownloadUrl(Guid id) => $"/api/documents/{id}/download";
+
+    private static string ContentTypeForExtension(string extension) =>
+        extension.ToLowerInvariant() switch
+        {
+            ".pdf" => "application/pdf",
+            ".png" => "image/png",
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".webp" => "image/webp",
+            ".csv" => "text/csv",
+            ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            ".xls" => "application/vnd.ms-excel",
+            _ => "application/octet-stream"
+        };
 }

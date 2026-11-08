@@ -27,8 +27,14 @@ class _AsyncList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (loading) return const SkeletonList();
-    if (error != null) return Center(child: ErrorState(message: error!, onRetry: onRefresh));
+    if (loading) {
+      return const SkeletonList();
+    }
+    if (error != null) {
+      return Center(
+        child: ErrorState(message: error!, onRetry: onRefresh),
+      );
+    }
     return RefreshIndicator(
       onRefresh: onRefresh,
       child: ListView(
@@ -40,7 +46,9 @@ class _AsyncList extends StatelessWidget {
 }
 
 Future<String?> _superAdminCompany() async =>
-    await AuthService.getRole() == UserRole.superAdmin ? AuthService.getCompanyId() : null;
+    await AuthService.getRole() == UserRole.superAdmin
+    ? AuthService.getCompanyId()
+    : null;
 
 // ───────────────────────────── Hedefler ─────────────────────────────
 
@@ -88,7 +96,11 @@ class _TargetsScreenState extends State<TargetsScreen> {
       title: 'Hedefler',
       subtitle: 'Yıllık (tahmini) emisyon baz yıla göre',
       floatingActionButton: _canCreate
-          ? FloatingActionButton.extended(onPressed: _create, icon: const Icon(Icons.add_rounded), label: const Text('Hedef ekle'))
+          ? FloatingActionButton.extended(
+              onPressed: _create,
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('Hedef ekle'),
+            )
           : null,
       body: _AsyncList(
         loading: _loading,
@@ -98,41 +110,88 @@ class _TargetsScreenState extends State<TargetsScreen> {
         empty: EmptyState(
           icon: Icons.flag_outlined,
           title: 'Henüz hedef yok',
-          message: 'Örn. 2030\'a kadar 2024 baz yılına göre %42 azaltım (SBTi uyumlu).',
-          action: _canCreate ? FilledButton(onPressed: _create, child: const Text('Hedef belirle')) : null,
+          message:
+              'Örn. 2030\'a kadar 2024 baz yılına göre %42 azaltım (SBTi uyumlu).',
+          action: _canCreate
+              ? FilledButton(
+                  onPressed: _create,
+                  child: const Text('Hedef belirle'),
+                )
+              : null,
         ),
         children: [
           if (p != null)
             GlassCard(
-              gradient: LinearGradient(colors: [AppColors.primary.withValues(alpha: 0.18), AppColors.surface]),
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.primary.withValues(alpha: 0.18),
+                  AppColors.surface,
+                ],
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      Text('%${pct.toStringAsFixed(0)}', style: const TextStyle(fontSize: 34, fontWeight: FontWeight.w800)),
+                      Text(
+                        '%${pct.toStringAsFixed(0)}',
+                        style: const TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
                       const SizedBox(width: 10),
-                      const Expanded(child: Text('hedefe ilerleme', style: TextStyle(color: AppColors.textMuted))),
+                      const Expanded(
+                        child: Text(
+                          'hedefe ilerleme',
+                          style: TextStyle(color: AppColors.textMuted),
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: LinearProgressIndicator(value: pct / 100, minHeight: 10, backgroundColor: AppColors.border),
+                    child: LinearProgressIndicator(
+                      value: pct / 100,
+                      minHeight: 10,
+                      backgroundColor: AppColors.border,
+                    ),
                   ),
                   const SizedBox(height: 14),
-                  Wrap(spacing: 8, runSpacing: 8, children: [
-                    StatusChip(label: 'Baz: ${Fmt.co2(p['baselineEmissions'] as num?)}', color: AppColors.textMuted),
-                    StatusChip(label: 'Bu yıl (gerçekleşen): ${Fmt.co2(p['currentEmissions'] as num?)}', color: AppColors.accent),
-                    if (p['isProjected'] == true)
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
                       StatusChip(
-                        label: 'Yıllık tahmin: ${Fmt.co2(p['projectedAnnualEmissions'] as num?)} · ${p['monthsCovered']} ay',
-                        color: AppColors.warning,
+                        label:
+                            'Baz: ${Fmt.co2(p['baselineEmissions'] as num?)}',
+                        color: AppColors.textMuted,
                       ),
-                    StatusChip(label: 'Hedef: ${Fmt.co2(p['targetEmissions'] as num?)}', color: AppColors.primary),
-                    if (((p['carbonCreditsOffset'] ?? 0) as num) > 0)
-                      StatusChip(label: 'Kredi: ${Fmt.co2(p['carbonCreditsOffset'] as num?)}', color: const Color(0xFFB18CFF)),
-                  ]),
+                      StatusChip(
+                        label:
+                            'Bu yıl (gerçekleşen): ${Fmt.co2(p['currentEmissions'] as num?)}',
+                        color: AppColors.accent,
+                      ),
+                      if (p['isProjected'] == true)
+                        StatusChip(
+                          label:
+                              'Yıllık tahmin: ${Fmt.co2(p['projectedAnnualEmissions'] as num?)} · ${p['monthsCovered']} ay',
+                          color: AppColors.warning,
+                        ),
+                      StatusChip(
+                        label:
+                            'Hedef: ${Fmt.co2(p['targetEmissions'] as num?)}',
+                        color: AppColors.primary,
+                      ),
+                      if (((p['carbonCreditsOffset'] ?? 0) as num) > 0)
+                        StatusChip(
+                          label:
+                              'Kredi: ${Fmt.co2(p['carbonCreditsOffset'] as num?)}',
+                          color: const Color(0xFFB18CFF),
+                        ),
+                    ],
+                  ),
                   const SizedBox(height: 12),
                   OutlinedButton.icon(
                     onPressed: () => Navigator.pushNamed(context, '/scenario'),
@@ -150,18 +209,31 @@ class _TargetsScreenState extends State<TargetsScreen> {
               child: GlassCard(
                 child: Row(
                   children: [
-                    const IconBadge(icon: Icons.flag_rounded, color: AppColors.primary),
+                    const IconBadge(
+                      icon: Icons.flag_rounded,
+                      color: AppColors.primary,
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${t['targetYear']}: %${Fmt.number(t['reductionPercent'] as num?)} azaltım',
-                              style: const TextStyle(fontWeight: FontWeight.w800)),
-                          Text('Baz ${t['baselineYear']} · ${Fmt.co2(t['baselineEmissions'] as num?)}',
-                              style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+                          Text(
+                            '${t['targetYear']}: %${Fmt.number(t['reductionPercent'] as num?)} azaltım',
+                            style: const TextStyle(fontWeight: FontWeight.w800),
+                          ),
+                          Text(
+                            'Baz ${t['baselineYear']} · ${Fmt.co2(t['baselineEmissions'] as num?)}',
+                            style: const TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 12,
+                            ),
+                          ),
                           if ((t['description'] ?? '').toString().isNotEmpty)
-                            Text(t['description'], style: const TextStyle(fontSize: 12)),
+                            Text(
+                              t['description'],
+                              style: const TextStyle(fontSize: 12),
+                            ),
                         ],
                       ),
                     ),
@@ -190,22 +262,60 @@ class _TargetsScreenState extends State<TargetsScreen> {
           builder: (ctx, setLocal) => Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(children: [
-                Expanded(child: TextField(controller: baseYear, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Baz yıl'))),
-                const SizedBox(width: 10),
-                Expanded(child: TextField(controller: targetYear, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Hedef yıl'))),
-              ]),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: baseYear,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(labelText: 'Baz yıl'),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      controller: targetYear,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(labelText: 'Hedef yıl'),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 12),
               TextField(
                 controller: baseline,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(labelText: 'Baz yıl emisyonu', suffixText: 'kgCO₂e'),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                decoration: const InputDecoration(
+                  labelText: 'Baz yıl emisyonu',
+                  suffixText: 'kgCO₂e',
+                ),
               ),
               const SizedBox(height: 12),
-              TextField(controller: percent, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Azaltım', suffixText: '%')),
+              TextField(
+                controller: percent,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Azaltım',
+                  suffixText: '%',
+                ),
+              ),
               const SizedBox(height: 12),
-              TextField(controller: desc, decoration: const InputDecoration(labelText: 'Açıklama (isteğe bağlı)')),
-              if (error != null) Padding(padding: const EdgeInsets.only(top: 10), child: Text(error!, style: const TextStyle(color: AppColors.danger))),
+              TextField(
+                controller: desc,
+                decoration: const InputDecoration(
+                  labelText: 'Açıklama (isteğe bağlı)',
+                ),
+              ),
+              if (error != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    error!,
+                    style: const TextStyle(color: AppColors.danger),
+                  ),
+                ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () async {
@@ -213,12 +323,17 @@ class _TargetsScreenState extends State<TargetsScreen> {
                     companyId: await _superAdminCompany(),
                     targetYear: int.tryParse(targetYear.text) ?? 0,
                     baselineYear: int.tryParse(baseYear.text) ?? 0,
-                    baselineEmissions: double.tryParse(baseline.text.replaceAll(',', '.')) ?? 0,
-                    reductionPercent: double.tryParse(percent.text.replaceAll(',', '.')) ?? 0,
+                    baselineEmissions:
+                        double.tryParse(baseline.text.replaceAll(',', '.')) ??
+                        0,
+                    reductionPercent:
+                        double.tryParse(percent.text.replaceAll(',', '.')) ?? 0,
                     description: desc.text.trim(),
                   );
                   if (!ctx.mounted) return;
-                  r.isOk ? Navigator.pop(ctx, true) : setLocal(() => error = r.error);
+                  r.isOk
+                      ? Navigator.pop(ctx, true)
+                      : setLocal(() => error = r.error);
                 },
                 child: const Text('Hedefi kaydet'),
               ),
@@ -279,45 +394,83 @@ class _UsersScreenState extends State<UsersScreen> {
       title: 'Kullanıcılar',
       subtitle: '${_users.length} kişi',
       floatingActionButton: _isAdmin
-          ? FloatingActionButton.extended(onPressed: _invite, icon: const Icon(Icons.person_add_alt_1_rounded), label: const Text('Davet et'))
+          ? FloatingActionButton.extended(
+              onPressed: _invite,
+              icon: const Icon(Icons.person_add_alt_1_rounded),
+              label: const Text('Davet et'),
+            )
           : null,
       body: _AsyncList(
         loading: _loading,
         error: _error,
         isEmpty: _users.isEmpty,
         onRefresh: _load,
-        empty: const EmptyState(icon: Icons.group_outlined, title: 'Kullanıcı yok'),
+        empty: const EmptyState(
+          icon: Icons.group_outlined,
+          title: 'Kullanıcı yok',
+        ),
         children: [
           for (final u in _users)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: GlassCard(
-                onTap: _isAdmin && u['email'] != _myEmail ? () => _manage(u) : null,
+                onTap: _isAdmin && u['email'] != _myEmail
+                    ? () => _manage(u)
+                    : null,
                 padding: const EdgeInsets.all(14),
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: (u['isActive'] == true ? AppColors.primary : AppColors.textMuted).withValues(alpha: 0.18),
-                      child: Text((u['fullName'] ?? '?').toString().substring(0, 1).toUpperCase(),
-                          style: TextStyle(color: u['isActive'] == true ? AppColors.primary : AppColors.textMuted, fontWeight: FontWeight.w800)),
+                      backgroundColor:
+                          (u['isActive'] == true
+                                  ? AppColors.primary
+                                  : AppColors.textMuted)
+                              .withValues(alpha: 0.18),
+                      child: Text(
+                        (u['fullName'] ?? '?')
+                            .toString()
+                            .substring(0, 1)
+                            .toUpperCase(),
+                        style: TextStyle(
+                          color: u['isActive'] == true
+                              ? AppColors.primary
+                              : AppColors.textMuted,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(u['fullName'] ?? '-', style: const TextStyle(fontWeight: FontWeight.w700)),
-                          Text(u['email'] ?? '', style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+                          Text(
+                            u['fullName'] ?? '-',
+                            style: const TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          Text(
+                            u['email'] ?? '',
+                            style: const TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        StatusChip(label: UserRoleX.parse(u['role']).label, color: AppColors.accent),
+                        StatusChip(
+                          label: UserRoleX.parse(u['role']).label,
+                          color: AppColors.accent,
+                        ),
                         if (u['isActive'] != true) ...[
                           const SizedBox(height: 4),
-                          const StatusChip(label: 'Pasif', color: AppColors.danger),
+                          const StatusChip(
+                            label: 'Pasif',
+                            color: AppColors.danger,
+                          ),
                         ],
                       ],
                     ),
@@ -338,19 +491,30 @@ class _UsersScreenState extends State<UsersScreen> {
       builder: (ctx) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text('Rol', style: TextStyle(color: AppColors.textMuted, fontSize: 12)),
+          const Text(
+            'Rol',
+            style: TextStyle(color: AppColors.textMuted, fontSize: 12),
+          ),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
             children: [
-              for (final r in ['Manager', 'Personnel', if (_role == UserRole.superAdmin) 'CompanyAdmin'])
+              for (final r in [
+                'Manager',
+                'Personnel',
+                if (_role == UserRole.superAdmin) 'CompanyAdmin',
+              ])
                 ChoiceChip(
                   selected: u['role'] == r,
                   label: Text(UserRoleX.parse(r).label),
                   onSelected: (_) async {
                     final res = await CompanyServices.setUserRole(u['id'], r);
                     if (!ctx.mounted) return;
-                    showToast(ctx, res.isOk ? 'Rol güncellendi.' : res.error!, error: !res.isOk);
+                    showToast(
+                      ctx,
+                      res.isOk ? 'Rol güncellendi.' : res.error!,
+                      error: !res.isOk,
+                    );
                     if (res.isOk) Navigator.pop(ctx, true);
                   },
                 ),
@@ -358,14 +522,24 @@ class _UsersScreenState extends State<UsersScreen> {
           ),
           const SizedBox(height: 18),
           OutlinedButton.icon(
-            style: OutlinedButton.styleFrom(foregroundColor: active ? AppColors.danger : AppColors.primary),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: active ? AppColors.danger : AppColors.primary,
+            ),
             onPressed: () async {
               final res = await CompanyServices.setUserStatus(u['id'], !active);
               if (!ctx.mounted) return;
-              showToast(ctx, res.isOk ? (active ? 'Hesap donduruldu.' : 'Hesap aktif edildi.') : res.error!, error: !res.isOk);
+              showToast(
+                ctx,
+                res.isOk
+                    ? (active ? 'Hesap donduruldu.' : 'Hesap aktif edildi.')
+                    : res.error!,
+                error: !res.isOk,
+              );
               if (res.isOk) Navigator.pop(ctx, true);
             },
-            icon: Icon(active ? Icons.block_rounded : Icons.check_circle_outline_rounded),
+            icon: Icon(
+              active ? Icons.block_rounded : Icons.check_circle_outline_rounded,
+            ),
             label: Text(active ? 'Hesabı dondur' : 'Hesabı aktif et'),
           ),
         ],
@@ -379,7 +553,7 @@ class _UsersScreenState extends State<UsersScreen> {
     final email = TextEditingController();
     final password = TextEditingController();
     String role = 'Personnel';
-    final ok = await showAppSheet<bool>(
+    final ok = await showAppSheet<Map<String, dynamic>>(
       context,
       title: 'Ekip üyesi ekle',
       builder: (ctx) {
@@ -388,21 +562,56 @@ class _UsersScreenState extends State<UsersScreen> {
           builder: (ctx, setLocal) => Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextField(controller: name, decoration: const InputDecoration(labelText: 'Ad Soyad', prefixIcon: Icon(Icons.person_outline))),
+              TextField(
+                controller: name,
+                decoration: const InputDecoration(
+                  labelText: 'Ad Soyad',
+                  prefixIcon: Icon(Icons.person_outline),
+                ),
+              ),
               const SizedBox(height: 12),
-              TextField(controller: email, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'E-posta', prefixIcon: Icon(Icons.mail_outline))),
+              TextField(
+                controller: email,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  labelText: 'E-posta',
+                  prefixIcon: Icon(Icons.mail_outline),
+                ),
+              ),
               const SizedBox(height: 12),
               TextField(
                 controller: password,
                 obscureText: true,
-                decoration: const InputDecoration(labelText: 'Geçici şifre', helperText: 'En az 8 karakter, harf ve rakam', prefixIcon: Icon(Icons.lock_outline)),
+                decoration: const InputDecoration(
+                  labelText: 'Geçici şifre',
+                  helperText: 'En az 8 karakter, harf ve rakam',
+                  prefixIcon: Icon(Icons.lock_outline),
+                ),
               ),
               const SizedBox(height: 12),
-              Wrap(spacing: 8, children: [
-                for (final r in ['Personnel', 'Manager', if (_role == UserRole.superAdmin) 'CompanyAdmin'])
-                  ChoiceChip(selected: role == r, label: Text(UserRoleX.parse(r).label), onSelected: (_) => setLocal(() => role = r)),
-              ]),
-              if (error != null) Padding(padding: const EdgeInsets.only(top: 10), child: Text(error!, style: const TextStyle(color: AppColors.danger))),
+              Wrap(
+                spacing: 8,
+                children: [
+                  for (final r in [
+                    'Personnel',
+                    'Manager',
+                    if (_role == UserRole.superAdmin) 'CompanyAdmin',
+                  ])
+                    ChoiceChip(
+                      selected: role == r,
+                      label: Text(UserRoleX.parse(r).label),
+                      onSelected: (_) => setLocal(() => role = r),
+                    ),
+                ],
+              ),
+              if (error != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    error!,
+                    style: const TextStyle(color: AppColors.danger),
+                  ),
+                ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () async {
@@ -414,7 +623,9 @@ class _UsersScreenState extends State<UsersScreen> {
                     password: password.text,
                   );
                   if (!ctx.mounted) return;
-                  r.isOk ? Navigator.pop(ctx, true) : setLocal(() => error = r.error);
+                  r.isOk
+                      ? Navigator.pop(ctx, r.data)
+                      : setLocal(() => error = r.error);
                 },
                 child: const Text('Kullanıcıyı oluştur'),
               ),
@@ -423,8 +634,16 @@ class _UsersScreenState extends State<UsersScreen> {
         );
       },
     );
-    if (ok == true) {
-      if (mounted) showToast(context, 'Kullanıcı eklendi. Geçici şifreyi kendisine iletin.');
+    if (ok is Map<String, dynamic>) {
+      final temporaryPassword = ok['temporaryPassword'] as String?;
+      if (mounted) {
+        showToast(
+          context,
+          temporaryPassword == null
+              ? 'Kullanıcı eklendi.'
+              : 'Kullanıcı eklendi. Geçici şifre: $temporaryPassword',
+        );
+      }
       _load();
     }
   }
@@ -461,14 +680,22 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
     });
   }
 
-  Color _esgColor(int s) => s >= 70 ? AppColors.primary : s >= 40 ? AppColors.warning : AppColors.danger;
+  Color _esgColor(int s) => s >= 70
+      ? AppColors.primary
+      : s >= 40
+      ? AppColors.warning
+      : AppColors.danger;
 
   @override
   Widget build(BuildContext context) {
     return PageScaffold(
       title: 'Tedarikçiler',
       subtitle: 'Kapsam 3 · değer zinciri',
-      floatingActionButton: FloatingActionButton.extended(onPressed: _add, icon: const Icon(Icons.add_rounded), label: const Text('Tedarikçi')),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _add,
+        icon: const Icon(Icons.add_rounded),
+        label: const Text('Tedarikçi'),
+      ),
       body: _AsyncList(
         loading: _loading,
         error: _error,
@@ -477,7 +704,8 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
         empty: const EmptyState(
           icon: Icons.local_shipping_outlined,
           title: 'Tedarikçi eklenmedi',
-          message: 'Kapsam 3 emisyonlarının büyük kısmı tedarik zincirinden gelir.',
+          message:
+              'Kapsam 3 emisyonlarının büyük kısmı tedarik zincirinden gelir.',
         ),
         children: [
           for (final s in _items)
@@ -488,21 +716,46 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
                 padding: const EdgeInsets.all(14),
                 child: Row(
                   children: [
-                    const IconBadge(icon: Icons.local_shipping_outlined, color: AppColors.accent),
+                    const IconBadge(
+                      icon: Icons.local_shipping_outlined,
+                      color: AppColors.accent,
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(s['name'] ?? '-', style: const TextStyle(fontWeight: FontWeight.w700)),
-                          Text(s['contactEmail'] ?? '', style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
+                          Text(
+                            s['name'] ?? '-',
+                            style: const TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          Text(
+                            s['contactEmail'] ?? '',
+                            style: const TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                     Column(
                       children: [
-                        Text('${s['esgScore'] ?? 0}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: _esgColor(s['esgScore'] ?? 0))),
-                        const Text('ESG', style: TextStyle(color: AppColors.textMuted, fontSize: 10)),
+                        Text(
+                          '${s['esgScore'] ?? 0}',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                            color: _esgColor(s['esgScore'] ?? 0),
+                          ),
+                        ),
+                        const Text(
+                          'ESG',
+                          style: TextStyle(
+                            color: AppColors.textMuted,
+                            fontSize: 10,
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -523,14 +776,36 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
         builder: (ctx, setLocal) => Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(child: Text('${score.round()}', style: TextStyle(fontSize: 40, fontWeight: FontWeight.w800, color: _esgColor(score.round())))),
-            Slider(value: score, min: 0, max: 100, divisions: 100, onChanged: (v) => setLocal(() => score = v)),
+            Center(
+              child: Text(
+                '${score.round()}',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w800,
+                  color: _esgColor(score.round()),
+                ),
+              ),
+            ),
+            Slider(
+              value: score,
+              min: 0,
+              max: 100,
+              divisions: 100,
+              onChanged: (v) => setLocal(() => score = v),
+            ),
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () async {
-                final r = await CompanyServices.setEsgScore(s['id'], score.round());
+                final r = await CompanyServices.setEsgScore(
+                  s['id'],
+                  score.round(),
+                );
                 if (!ctx.mounted) return;
-                showToast(ctx, r.isOk ? 'Puan güncellendi.' : r.error!, error: !r.isOk);
+                showToast(
+                  ctx,
+                  r.isOk ? 'Puan güncellendi.' : r.error!,
+                  error: !r.isOk,
+                );
                 if (r.isOk) Navigator.pop(ctx, true);
               },
               child: const Text('Kaydet'),
@@ -554,16 +829,38 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
           builder: (ctx, setLocal) => Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextField(controller: name, decoration: const InputDecoration(labelText: 'Firma adı')),
+              TextField(
+                controller: name,
+                decoration: const InputDecoration(labelText: 'Firma adı'),
+              ),
               const SizedBox(height: 12),
-              TextField(controller: email, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'İletişim e-postası')),
-              if (error != null) Padding(padding: const EdgeInsets.only(top: 10), child: Text(error!, style: const TextStyle(color: AppColors.danger))),
+              TextField(
+                controller: email,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  labelText: 'İletişim e-postası',
+                ),
+              ),
+              if (error != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    error!,
+                    style: const TextStyle(color: AppColors.danger),
+                  ),
+                ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () async {
-                  final r = await CompanyServices.addSupplier(companyId: await _superAdminCompany(), name: name.text.trim(), email: email.text.trim());
+                  final r = await CompanyServices.addSupplier(
+                    companyId: await _superAdminCompany(),
+                    name: name.text.trim(),
+                    email: email.text.trim(),
+                  );
                   if (!ctx.mounted) return;
-                  r.isOk ? Navigator.pop(ctx, true) : setLocal(() => error = r.error);
+                  r.isOk
+                      ? Navigator.pop(ctx, true)
+                      : setLocal(() => error = r.error);
                 },
                 child: const Text('Ekle'),
               ),
@@ -617,13 +914,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         error: _error,
         isEmpty: _items.isEmpty,
         onRefresh: _load,
-        empty: const EmptyState(icon: Icons.notifications_none_rounded, title: 'Bildirim yok', message: 'Her şey yolunda görünüyor.'),
+        empty: const EmptyState(
+          icon: Icons.notifications_none_rounded,
+          title: 'Bildirim yok',
+          message: 'Her şey yolunda görünüyor.',
+        ),
         children: [
           for (final n in _items)
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: GlassCard(
-                borderColor: n['isRead'] == true ? null : AppColors.warning.withValues(alpha: 0.4),
+                borderColor: n['isRead'] == true
+                    ? null
+                    : AppColors.warning.withValues(alpha: 0.4),
                 onTap: n['isRead'] == true
                     ? null
                     : () async {
@@ -634,17 +937,38 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IconBadge(icon: Icons.notifications_rounded, color: n['isRead'] == true ? AppColors.textMuted : AppColors.warning, size: 38),
+                    IconBadge(
+                      icon: Icons.notifications_rounded,
+                      color: n['isRead'] == true
+                          ? AppColors.textMuted
+                          : AppColors.warning,
+                      size: 38,
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(n['title'] ?? '', style: const TextStyle(fontWeight: FontWeight.w700)),
+                          Text(
+                            n['title'] ?? '',
+                            style: const TextStyle(fontWeight: FontWeight.w700),
+                          ),
                           const SizedBox(height: 2),
-                          Text(n['message'] ?? '', style: const TextStyle(color: AppColors.textMuted, fontSize: 12.5)),
+                          Text(
+                            n['message'] ?? '',
+                            style: const TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 12.5,
+                            ),
+                          ),
                           const SizedBox(height: 4),
-                          Text(Fmt.relative(n['createdAt']), style: const TextStyle(color: AppColors.textMuted, fontSize: 11)),
+                          Text(
+                            Fmt.relative(n['createdAt']),
+                            style: const TextStyle(
+                              color: AppColors.textMuted,
+                              fontSize: 11,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -693,7 +1017,9 @@ class _AuditLogsScreenState extends State<AuditLogsScreen> {
 
   Future<void> _load() async {
     setState(() => _loading = true);
-    final r = await CompanyServices.auditLogs(companyId: await _superAdminCompany());
+    final r = await CompanyServices.auditLogs(
+      companyId: await _superAdminCompany(),
+    );
     if (!mounted) return;
     setState(() {
       _loading = false;
@@ -704,8 +1030,16 @@ class _AuditLogsScreenState extends State<AuditLogsScreen> {
   }
 
   (IconData, Color, String) _action(String a) => switch (a) {
-    'Create' => (Icons.add_circle_outline_rounded, AppColors.primary, 'oluşturdu'),
-    'Delete' => (Icons.remove_circle_outline_rounded, AppColors.danger, 'sildi'),
+    'Create' => (
+      Icons.add_circle_outline_rounded,
+      AppColors.primary,
+      'oluşturdu',
+    ),
+    'Delete' => (
+      Icons.remove_circle_outline_rounded,
+      AppColors.danger,
+      'sildi',
+    ),
     _ => (Icons.edit_outlined, AppColors.accent, 'güncelledi'),
   };
 
@@ -713,42 +1047,64 @@ class _AuditLogsScreenState extends State<AuditLogsScreen> {
   Widget build(BuildContext context) {
     return PageScaffold(
       title: 'Denetim kaydı',
-      subtitle: _total > _items.length ? 'Son ${_items.length} / $_total işlem' : '$_total işlem',
+      subtitle: _total > _items.length
+          ? 'Son ${_items.length} / $_total işlem'
+          : '$_total işlem',
       body: _AsyncList(
         loading: _loading,
         error: _error,
         isEmpty: _items.isEmpty,
         onRefresh: _load,
-        empty: const EmptyState(icon: Icons.history_rounded, title: 'Kayıt yok'),
+        empty: const EmptyState(
+          icon: Icons.history_rounded,
+          title: 'Kayıt yok',
+        ),
         children: [
           for (final l in _items)
-            Builder(builder: (context) {
-              final (icon, color, verb) = _action(l['action'] ?? '');
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: GlassCard(
-                  onTap: () => _detail(l),
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    children: [
-                      Icon(icon, color: color, size: 22),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('${l['userName']} ${_entityLabels[l['entityName']] ?? l['entityName']} $verb',
-                                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                            Text(Fmt.dateTime(l['createdAt']), style: const TextStyle(color: AppColors.textMuted, fontSize: 11)),
-                          ],
+            Builder(
+              builder: (context) {
+                final (icon, color, verb) = _action(l['action'] ?? '');
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: GlassCard(
+                    onTap: () => _detail(l),
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      children: [
+                        Icon(icon, color: color, size: 22),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${l['userName']} ${_entityLabels[l['entityName']] ?? l['entityName']} $verb',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              Text(
+                                Fmt.dateTime(l['createdAt']),
+                                style: const TextStyle(
+                                  color: AppColors.textMuted,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const Icon(Icons.chevron_right_rounded, color: AppColors.textMuted, size: 18),
-                    ],
+                        const Icon(
+                          Icons.chevron_right_rounded,
+                          color: AppColors.textMuted,
+                          size: 18,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            }),
+                );
+              },
+            ),
         ],
       ),
     );
@@ -762,15 +1118,33 @@ class _AuditLogsScreenState extends State<AuditLogsScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (l['oldValues'] != null) ...[
-            const Text('Önce', style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.w700)),
+            const Text(
+              'Önce',
+              style: TextStyle(
+                color: AppColors.danger,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
             const SizedBox(height: 4),
-            SelectableText(l['oldValues'], style: const TextStyle(fontFamily: 'monospace', fontSize: 11.5)),
+            SelectableText(
+              l['oldValues'],
+              style: const TextStyle(fontFamily: 'monospace', fontSize: 11.5),
+            ),
             const SizedBox(height: 12),
           ],
           if (l['newValues'] != null) ...[
-            const Text('Sonra', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w700)),
+            const Text(
+              'Sonra',
+              style: TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
             const SizedBox(height: 4),
-            SelectableText(l['newValues'], style: const TextStyle(fontFamily: 'monospace', fontSize: 11.5)),
+            SelectableText(
+              l['newValues'],
+              style: const TextStyle(fontFamily: 'monospace', fontSize: 11.5),
+            ),
           ],
         ],
       ),
@@ -797,8 +1171,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    CompanyServices.me().then((r) => mounted ? setState(() => _me = r.data) : null);
-    ApiClient.get('/ai/status').then((r) => mounted && ApiClient.isOk(r) ? setState(() => _ai = ApiClient.decode(r)) : null);
+    CompanyServices.me().then(
+      (r) => mounted ? setState(() => _me = r.data) : null,
+    );
+    ApiClient.get('/ai/status').then(
+      (r) => mounted && ApiClient.isOk(r)
+          ? setState(() => _ai = ApiClient.decode(r))
+          : null,
+    );
   }
 
   @override
@@ -813,7 +1193,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final r = await AuthService.changePassword(_current.text, _next.text);
     if (!mounted) return;
     setState(() => _saving = false);
-    showToast(context, r.isOk ? 'Şifre değiştirildi. Diğer cihazlardaki oturumlar kapatıldı.' : r.error!, error: !r.isOk);
+    showToast(
+      context,
+      r.isOk
+          ? 'Şifre değiştirildi. Diğer cihazlardaki oturumlar kapatıldı.'
+          : r.error!,
+      error: !r.isOk,
+    );
     if (r.isOk) {
       _current.clear();
       _next.clear();
@@ -836,8 +1222,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _info('Ad Soyad', me?['fullName']),
                 _info('E-posta', me?['email']),
                 _info('Şirket', me?['companyName']),
-                _info('Rol', me == null ? null : UserRoleX.parse(me['role']).label),
-                _info('2FA', me == null ? null : (me['twoFactorEnabled'] == true ? 'Aktif' : 'Kapalı')),
+                _info(
+                  'Rol',
+                  me == null ? null : UserRoleX.parse(me['role']).label,
+                ),
+                _info(
+                  '2FA',
+                  me == null
+                      ? null
+                      : (me['twoFactorEnabled'] == true ? 'Aktif' : 'Kapalı'),
+                ),
               ],
             ),
           ),
@@ -846,12 +1240,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SectionTitle('Şifre değiştir', subtitle: 'En az 8 karakter, harf ve rakam'),
-                TextField(controller: _current, obscureText: true, decoration: const InputDecoration(labelText: 'Mevcut şifre', prefixIcon: Icon(Icons.lock_outline))),
+                const SectionTitle(
+                  'Şifre değiştir',
+                  subtitle: 'En az 8 karakter, harf ve rakam',
+                ),
+                TextField(
+                  controller: _current,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Mevcut şifre',
+                    prefixIcon: Icon(Icons.lock_outline),
+                  ),
+                ),
                 const SizedBox(height: 12),
-                TextField(controller: _next, obscureText: true, decoration: const InputDecoration(labelText: 'Yeni şifre', prefixIcon: Icon(Icons.lock_reset_rounded))),
+                TextField(
+                  controller: _next,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Yeni şifre',
+                    prefixIcon: Icon(Icons.lock_reset_rounded),
+                  ),
+                ),
                 const SizedBox(height: 14),
-                ElevatedButton(onPressed: _saving ? null : _change, child: const Text('Şifreyi güncelle')),
+                ElevatedButton(
+                  onPressed: _saving ? null : _change,
+                  child: const Text('Şifreyi güncelle'),
+                ),
               ],
             ),
           ),
@@ -860,8 +1274,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SectionTitle('Yapay zeka', subtitle: 'Yerel Ollama modelleri'),
-                _info('Durum', _ai == null ? null : (_ai!['available'] == true ? 'Çalışıyor' : (_ai!['error'] ?? 'Çevrimdışı'))),
+                const SectionTitle(
+                  'Yapay zeka',
+                  subtitle: 'Yerel Ollama modelleri',
+                ),
+                _info(
+                  'Durum',
+                  _ai == null
+                      ? null
+                      : (_ai!['available'] == true
+                            ? 'Çalışıyor'
+                            : (_ai!['error'] ?? 'Çevrimdışı')),
+                ),
                 _info('Görsel (OCR)', _ai?['visionModel']),
                 _info('Metin / asistan', _ai?['textModel']),
               ],
@@ -876,8 +1300,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
     padding: const EdgeInsets.symmetric(vertical: 6),
     child: Row(
       children: [
-        SizedBox(width: 120, child: Text(label, style: const TextStyle(color: AppColors.textMuted, fontSize: 13))),
-        Expanded(child: Text(value?.toString() ?? '…', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13))),
+        SizedBox(
+          width: 120,
+          child: Text(
+            label,
+            style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value?.toString() ?? '…',
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+          ),
+        ),
       ],
     ),
   );

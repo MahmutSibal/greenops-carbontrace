@@ -47,7 +47,7 @@ flowchart LR
 - **Gorevler ayriligi:** Veriyi giren kisi kendi kaydini onaylayamaz; onaylanmis kayit silinemez.
 - **Gizli degerler:** Sifre sifirlama token'lari ve API anahtarlari DB'de SHA-256 hash olarak saklanir.
 - **Rate limit:** Auth uclari IP basina dakikada 10, webhook anahtar basina dakikada 120 istek.
-- **Dosyalar:** Uzanti beyaz listesi ve boyut siniri (belge 10 MB, avatar 2 MB); dosyalar web kokunden servis edilmez, yetki kontrollu indirme ucu kullanilir.
+- **Dosyalar:** Uzanti, icerik imzasi ve boyut siniri (belge 10 MB, avatar 2 MB); dosyalar web kokunden servis edilmez, yetki kontrollu indirme ucu kullanilir.
 
 ## 4. Kurulum ve Calistirma
 
@@ -120,6 +120,17 @@ Not: qwen3-vl'ye dogrudan JSON istendiginde dusunme ciktisinda takildigi gozlend
 
 - `POST /api/targets/scenario`: kategori basina tuketim azaltim yuzdesi alir (`measures: [{categoryId, reductionPercent}]`), son 12 tam ayin onayli emisyonundan yillik tasarrufu ve aktif hedefe yetip yetmedigini hesaplar. 12 aydan az veri varsa tutarlar yilliga olceklenir (`isProjected`). Onlem basina tasarruf orani uydurulmaz; yuzdeyi kullanici girer.
 - `GET /api/reports/inventory?year=2026&format=pdf|xlsx`: yillik envanter ozeti. Yalnizca onayli kayitlar; kapsam, kategori (tuketim + katsayi), tesis ve ay kirilimi; dogrulanmis katsayi payi; Excel'de kayit kayit dokum (katsayi yili, kaynagi, giren, onaylayan). Rapor ucuncu taraf dogrulamasi iddia etmez.
+- `POST /api/carbon-passports`: onayli emisyon kayitlarini urun/parti/sevkiyat baglaminda birlestirerek **CarbonTrace Export Passport** olusturur. Toplam ve ton basina tCO2e, kanit sayisi, katsayi/kanit/donem kapsamina dayali veri guvenilirligi skoru ve tek seferlik acik paylasim token'i uretir.
+- `GET /api/carbon-passports/{id}/pdf`: CBAM-ready kanit ozetini PDF olarak indirir. `GET /api/public/carbon-passports/{token}` kimlik dogrulama gerektirmeyen, sirket ici tesis detaylarini icermeyen salt okunur alici gorunumudur.
+
+### COP31 finalist demo akisi
+
+1. Raporlar ekraninda yil secilir ve **Export Passport olustur ve paylas** secilir.
+2. Urun adi, tonaj ve sevkiyat referansi girilir; sistem sadece ayni sirketin onayli emisyon kayitlarini kullanir.
+3. PDF ve public dogrulama baglantisi birlikte paylasilir. Alici; urun, donem, tCO2e, birim emisyon, kanit sayisi ve veri guvenilirligini gorur.
+4. Sunum mesaji: *"CarbonTrace sadece karbonu hesaplamaz; ihracat urununun sinirda tasidigi karbon kanitini da paketler."*
+
+Passport, resmi kurum veya ucuncu taraf dogrulama sertifikasi degildir; CarbonTrace denetim izi ve onayli kayitlarindan uretilen CBAM-ready bir kanit ozetidir.
 
 ## 7. Emisyon Katsayilari — ONEMLI
 
@@ -141,7 +152,7 @@ Katsayilar `POST /api/factors/custom` (SuperAdmin) ile eklenir; `source` alani z
 
 ## 8. Bilinen Eksikler
 
-- E-posta servisi yok (davet, sifre sifirlama, tedarikci daveti).
+- E-posta servisi yok (sifre sifirlama ve tedarikci daveti); kullanici davetinde parola girilmezse API, yoneticinin davetliyi guvenli kanaldan iletmesi icin rastgele gecici parolayi tek seferlik yanitta doner.
 - ISO 14064 / GHG Protocol sablonlu dogrulama raporu yok (ilgili uclar acik hata doner); yerine kurum ici yillik envanter ozeti `GET /api/reports/inventory` (PDF/Excel) vardir.
 - AI fatura okuma sadece gorsel (png/jpg/webp) kabul eder; PDF desteklenmez.
 - Odeme entegrasyonu yok; paket yukseltmede fatura "Pending" olusur.

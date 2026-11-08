@@ -10,7 +10,7 @@ public enum FileCategory
 
 public interface IFileStorage
 {
-    /// <summary>Uzantı ve boyutu doğrular, dosyayı rastgele bir adla kaydeder ve göreli yolunu döner.</summary>
+    /// <summary>Uzantı, içerik imzası ve boyutu doğrular; dosyayı rastgele adla kaydedip göreli yolu döner.</summary>
     Task<Result<string>> SaveAsync(FileCategory category, string originalFileName, long length, Stream content, CancellationToken cancellationToken = default);
 
     /// <summary>Göreli yolu fiziksel yola çevirir; depolama kökü dışına çıkan yollar için null döner.</summary>

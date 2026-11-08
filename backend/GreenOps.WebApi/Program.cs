@@ -61,12 +61,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 var db = context.HttpContext.RequestServices.GetRequiredService<AppDbContext>();
                 var user = await db.Users.AsNoTracking()
                     .Where(u => u.Id == userId)
-                    .Select(u => new { u.IsActive, u.Role, u.CompanyId })
+                    .Select(u => new
+                    {
+                        u.IsActive,
+                        u.Role,
+                        u.CompanyId,
+                        CompanyIsActive = u.CompanyId == null || u.Company!.IsActive
+                    })
                     .FirstOrDefaultAsync(context.HttpContext.RequestAborted);
 
                 var claimCompany = principal.FindFirstValue("companyId");
                 if (user is null
                     || !user.IsActive
+                    || !user.CompanyIsActive
                     || user.Role.ToString() != principal.FindFirstValue(ClaimTypes.Role)
                     || (user.CompanyId?.ToString() ?? "") != (claimCompany ?? ""))
                 {

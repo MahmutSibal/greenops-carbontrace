@@ -1,6 +1,7 @@
 using GreenOps.Application.Abstractions.Services;
 using GreenOps.Application.Common;
 using Microsoft.Extensions.Configuration;
+using System.Text;
 
 namespace GreenOps.Infrastructure.Storage;
 
@@ -46,9 +47,19 @@ public class LocalFileStorage : IFileStorage
 
         await using (var fs = new FileStream(fullPath, FileMode.CreateNew))
         {
-            // Bildirilen uzunluktan fazlasını yazma (sahte Content-Length'e karşı).
             var buffer = new byte[81920];
             long written = 0;
+            var prefixLength = await content.ReadAsync(buffer.AsMemory(0, Math.Min(buffer.Length, 4096)), cancellationToken);
+            if (!HasExpectedSignature(ext, buffer.AsSpan(0, prefixLength)))
+            {
+                fs.Close();
+                File.Delete(fullPath);
+                return Result<string>.Failure("Dosya içeriği uzantısıyla eşleşmiyor.");
+            }
+
+            await fs.WriteAsync(buffer.AsMemory(0, prefixLength), cancellationToken);
+            written += prefixLength;
+
             int read;
             while ((read = await content.ReadAsync(buffer, cancellationToken)) > 0)
             {
@@ -79,5 +90,29 @@ public class LocalFileStorage : IFileStorage
         var fullPath = ResolvePath(storedPath);
         if (fullPath is not null)
             File.Delete(fullPath);
+    }
+
+    private static bool HasExpectedSignature(string extension, ReadOnlySpan<byte> prefix)
+    {
+        return extension switch
+        {
+            ".png" => prefix.Length >= 8 && prefix[..8].SequenceEqual(new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 }),
+            ".jpg" or ".jpeg" => prefix.Length >= 3 && prefix[..3].SequenceEqual(new byte[] { 255, 216, 255 }),
+            ".webp" => prefix.Length >= 12
+                       && prefix[..4].SequenceEqual(Encoding.ASCII.GetBytes("RIFF"))
+                       && prefix[8..12].SequenceEqual(Encoding.ASCII.GetBytes("WEBP")),
+            ".pdf" => prefix.Length >= 5 && Encoding.ASCII.GetString(prefix[..5]) == "%PDF-",
+            ".xls" => prefix.Length >= 8 && prefix[..8].SequenceEqual(new byte[] { 208, 207, 17, 224, 161, 177, 26, 225 }),
+            ".xlsx" => prefix.Length >= 2 && prefix[..2].SequenceEqual(new byte[] { 80, 75 }),
+            ".csv" => IsText(prefix),
+            _ => false
+        };
+    }
+
+    private static bool IsText(ReadOnlySpan<byte> prefix)
+    {
+        foreach (var value in prefix)
+            if (value == 0) return false;
+        return true;
     }
 }

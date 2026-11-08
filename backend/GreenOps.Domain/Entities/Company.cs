@@ -25,4 +25,5 @@ public class Company
     public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
     public ICollection<ApiKey> ApiKeys { get; set; } = new List<ApiKey>();
     public ICollection<Report> Reports { get; set; } = new List<Report>();
+    public ICollection<ExportCarbonPassport> ExportCarbonPassports { get; set; } = new List<ExportCarbonPassport>();
 }

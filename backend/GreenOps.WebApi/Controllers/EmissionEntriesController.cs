@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 using GreenOps.Application.EmissionEntries;
 using GreenOps.Application.EmissionEntries.Commands;
 using GreenOps.Domain.Entities;
@@ -68,7 +69,12 @@ public class EmissionEntriesController : ApiControllerBase
                 break;
             }
 
-            var parts = line.Split(',');
+            if (!TryParseCsvLine(line, out var parts))
+            {
+                errors.Add($"Satır {lineNumber}: Geçersiz CSV biçimi.");
+                continue;
+            }
+
             if (parts.Length < 3)
             {
                 errors.Add($"Satır {lineNumber}: Yetersiz sütun.");
@@ -255,6 +261,49 @@ public class EmissionEntriesController : ApiControllerBase
         if (!DateTime.TryParseExact(raw.Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var d))
             return false;
         date = new DateTimeOffset(d, TimeSpan.Zero);
+        return true;
+    }
+
+    private static bool TryParseCsvLine(string line, out string[] fields)
+    {
+        var parsed = new List<string>();
+        var field = new StringBuilder();
+        var quoted = false;
+
+        for (var i = 0; i < line.Length; i++)
+        {
+            var ch = line[i];
+            if (ch == '"')
+            {
+                if (quoted && i + 1 < line.Length && line[i + 1] == '"')
+                {
+                    field.Append('"');
+                    i++;
+                }
+                else
+                {
+                    quoted = !quoted;
+                }
+            }
+            else if (ch == ',' && !quoted)
+            {
+                parsed.Add(field.ToString());
+                field.Clear();
+            }
+            else
+            {
+                field.Append(ch);
+            }
+        }
+
+        if (quoted)
+        {
+            fields = Array.Empty<string>();
+            return false;
+        }
+
+        parsed.Add(field.ToString());
+        fields = parsed.ToArray();
         return true;
     }
 }

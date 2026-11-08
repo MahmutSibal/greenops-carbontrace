@@ -28,9 +28,12 @@ public class AiController : ApiControllerBase
     [HttpPost("invoice-scan")]
     [RequestSizeLimit(MaxImageBytes + 1024 * 1024)]
     [EnableRateLimiting(RateLimitPolicies.Ai)]
-    public async Task<IActionResult> InvoiceScan(IFormFile file, CancellationToken ct)
+    public async Task<IActionResult> InvoiceScan(
+        IFormFile file,
+        [FromQuery] Guid? companyId,
+        CancellationToken ct)
     {
-        if (CurrentCompanyId is not { } companyId && !IsSuperAdmin) return Forbid();
+        if (!TryResolveCompany(companyId, out var cid)) return CompanyForbidden();
         if (file is null || file.Length == 0) return BadRequest(new { error = "Görsel seçilmedi." });
         if (file.Length > MaxImageBytes) return BadRequest(new { error = "Görsel en fazla 8 MB olabilir." });
         if (!ImageExtensions.Contains(Path.GetExtension(file.FileName).ToLowerInvariant()))
@@ -39,7 +42,7 @@ public class AiController : ApiControllerBase
         using var ms = new MemoryStream();
         await file.CopyToAsync(ms, ct);
 
-        var result = await _aiService.ExtractInvoiceAsync(CurrentCompanyId ?? Guid.Empty, ms.ToArray(), ct);
+        var result = await _aiService.ExtractInvoiceAsync(cid, ms.ToArray(), ct);
         if (!result.IsSuccess) return StatusCode(StatusCodes.Status503ServiceUnavailable, new { error = result.Error });
         return Ok(result.Value);
     }
